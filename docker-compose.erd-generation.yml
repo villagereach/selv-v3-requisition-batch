@@ -1,0 +1,20 @@
+version: "2"
+services:
+
+  requisition-batch:
+    image: openlmis/requisition-batch
+    links:
+      - db
+      - log
+    env_file: .env
+
+  db:
+    image: openlmis/postgres:9.6
+    ports:
+      - "8765:5432"
+    env_file: .env
+
+  log:
+    image: openlmis/rsyslog:1
+    volumes:
+      - '../logs/requisition-batch:/var/log'
