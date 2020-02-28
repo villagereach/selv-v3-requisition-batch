@@ -31,7 +31,6 @@ import guru.nidi.ramltester.RamlLoaders;
 import guru.nidi.ramltester.restassured.RestAssuredClient;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
-import org.javers.core.Javers;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
@@ -42,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -104,9 +102,6 @@ public abstract class BaseWebIntegrationTest {
 
   @Autowired
   private ObjectMapper objectMapper;
-
-  @SpyBean(name = "javersProvider")
-  Javers javers;
 
   /**
    * Constructor for test.
