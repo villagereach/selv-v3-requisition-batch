@@ -1,8 +1,8 @@
--- Table: requisition.batch_requisitions
+-- Table: requisitionbatch.batch_requisitions
 
--- DROP TABLE requisition.batch_requisitions;
+-- DROP TABLE requisitionbatch.batch_requisitions;
 
-CREATE TABLE requisition.batch_requisitions
+CREATE TABLE requisitionbatch.batch_requisitions
 (
     id uuid NOT NULL,
     createddate timestamp with time zone,
@@ -28,34 +28,34 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisition.batch_requisitions
+ALTER TABLE requisitionbatch.batch_requisitions
     OWNER to postgres;
 
 -- Index: batch_req_prod_fac_per
 
--- DROP INDEX requisition.batch_req_prod_fac_per;
+-- DROP INDEX requisitionbatch.batch_req_prod_fac_per;
 
 CREATE UNIQUE INDEX batch_req_prod_fac_per
-    ON requisition.batch_requisitions USING btree
+    ON requisitionbatch.batch_requisitions USING btree
     (programid, facilityid, processingperiodid)
     TABLESPACE pg_default
     WHERE emergency = false AND supervisorynodeid IS NULL;
 
 -- Index: batch_req_prod_fac_per_node
 
--- DROP INDEX requisition.batch_req_prod_fac_per_node;
+-- DROP INDEX requisitionbatch.batch_req_prod_fac_per_node;
 
 CREATE UNIQUE INDEX batch_req_prod_fac_per_node
-    ON requisition.batch_requisitions USING btree
+    ON requisitionbatch.batch_requisitions USING btree
     (programid, facilityid, processingperiodid, supervisorynodeid)
     TABLESPACE pg_default
     WHERE emergency = false AND supervisorynodeid IS NOT NULL;
 
--- Table: requisition.batch_requisition_line_items
+-- Table: requisitionbatch.batch_requisition_line_items
 
--- DROP TABLE requisition.batch_requisition_line_items;
+-- DROP TABLE requisitionbatch.batch_requisition_line_items;
 
-CREATE TABLE requisition.batch_requisition_line_items
+CREATE TABLE requisitionbatch.batch_requisition_line_items
 (
     id uuid NOT NULL,
     adjustedconsumption integer,
@@ -87,7 +87,7 @@ CREATE TABLE requisition.batch_requisition_line_items
     additionalquantityrequired integer,
     CONSTRAINT batch_requisition_line_items_pkey PRIMARY KEY (id),
     CONSTRAINT fk_batch_4sg1naierwgt9avsjcm76a2yl FOREIGN KEY (requisitionid)
-        REFERENCES requisition.batch_requisitions (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_requisitions (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -97,26 +97,26 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisition.batch_requisition_line_items
+ALTER TABLE requisitionbatch.batch_requisition_line_items
     OWNER to postgres;
 
 -- Index: batch_requisition_line_items_requisitionid_idx
 
--- DROP INDEX requisition.batch_requisition_line_items_requisitionid_idx;
+-- DROP INDEX requisitionbatch.batch_requisition_line_items_requisitionid_idx;
 
 CREATE INDEX batch_requisition_line_items_requisitionid_idx
-    ON requisition.batch_requisition_line_items USING btree
+    ON requisitionbatch.batch_requisition_line_items USING btree
     (requisitionid)
     TABLESPACE pg_default;
 
-ALTER TABLE requisition.batch_requisition_line_items
+ALTER TABLE requisitionbatch.batch_requisition_line_items
     CLUSTER ON batch_requisition_line_items_requisitionid_idx;
 
--- Table: requisition.batch_status_changes
+-- Table: requisitionbatch.batch_status_changes
 
--- DROP TABLE requisition.batch_status_changes;
+-- DROP TABLE requisitionbatch.batch_status_changes;
 
-CREATE TABLE requisition.batch_status_changes
+CREATE TABLE requisitionbatch.batch_status_changes
 (
     id uuid NOT NULL,
     createddate timestamp with time zone,
@@ -132,15 +132,15 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisition.batch_status_changes
+ALTER TABLE requisitionbatch.batch_status_changes
     OWNER to postgres;
 
 -- Index: batch_status_changes_requisitionid_idx
 
--- DROP INDEX requisition.batch_status_changes_requisitionid_idx;
+-- DROP INDEX requisitionbatch.batch_status_changes_requisitionid_idx;
 
 CREATE INDEX batch_status_changes_requisitionid_idx
-    ON requisition.batch_status_changes USING btree
+    ON requisitionbatch.batch_status_changes USING btree
     (requisitionid)
     TABLESPACE pg_default;
 
@@ -150,7 +150,7 @@ BEGIN
   CREATE TEMP TABLE batch_status_change_data AS
   (
       SELECT status, supervisorynodeid
-      FROM requisition.batch_status_changes
+      FROM requisitionbatch.batch_status_changes
       WHERE requisitionid = NEW.requisitionid
       ORDER BY createddate DESC
       LIMIT 2
@@ -167,19 +167,19 @@ END $$;
 
 -- Trigger: batch_check_status_changes
 
--- DROP TRIGGER batch_check_status_changes ON requisition.batch_status_changes;
+-- DROP TRIGGER batch_check_status_changes ON requisitionbatch.batch_status_changes;
 
 CREATE CONSTRAINT TRIGGER batch_check_status_changes
     AFTER INSERT
-    ON requisition.batch_status_changes
+    ON requisitionbatch.batch_status_changes
     DEFERRABLE INITIALLY DEFERRED    FOR EACH ROW
-    EXECUTE PROCEDURE requisition.batch_unique_status_changes();
+    EXECUTE PROCEDURE requisitionbatch.batch_unique_status_changes();
 
--- Table: requisition.batch_status_messages
+-- Table: requisitionbatch.batch_status_messages
 
--- DROP TABLE requisition.batch_status_messages;
+-- DROP TABLE requisitionbatch.batch_status_messages;
 
-CREATE TABLE requisition.batch_status_messages
+CREATE TABLE requisitionbatch.batch_status_messages
 (
     id uuid NOT NULL,
     createddate timestamp with time zone,
@@ -196,12 +196,12 @@ CREATE TABLE requisition.batch_status_messages
 
         DEFERRABLE INITIALLY DEFERRED,
     CONSTRAINT fk_batch_hp6wryw9250cf3jhceddvmn5b FOREIGN KEY (requisitionid)
-        REFERENCES requisition.batch_requisitions (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_requisitions (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
     CONSTRAINT fk_batch_status_messages_status_change_id FOREIGN KEY (statuschangeid)
-        REFERENCES requisition.batch_status_changes (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_status_changes (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -211,14 +211,14 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisition.batch_status_messages
+ALTER TABLE requisitionbatch.batch_status_messages
     OWNER to postgres;
 
--- Table: requisition.batch_stock_adjustments
+-- Table: requisitionbatch.batch_stock_adjustments
 
--- DROP TABLE requisition.batch_stock_adjustments;
+-- DROP TABLE requisitionbatch.batch_stock_adjustments;
 
-CREATE TABLE requisition.batch_stock_adjustments
+CREATE TABLE requisitionbatch.batch_stock_adjustments
 (
     id uuid NOT NULL,
     quantity integer NOT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE requisition.batch_stock_adjustments
     requisitionlineitemid uuid,
     CONSTRAINT batch_stock_adjustments_pkey PRIMARY KEY (id),
     CONSTRAINT fk_batch_9nqi8imo7ty6jafeijhviynrt FOREIGN KEY (requisitionlineitemid)
-        REFERENCES requisition.batch_requisition_line_items (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_requisition_line_items (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -236,15 +236,15 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisition.batch_stock_adjustments
+ALTER TABLE requisitionbatch.batch_stock_adjustments
     OWNER to postgres;
 
 -- Index: batch_req_line_reason
 
--- DROP INDEX requisition.batch_req_line_reason;
+-- DROP INDEX requisitionbatch.batch_req_line_reason;
 
 CREATE UNIQUE INDEX batch_req_line_reason
-    ON requisition.batch_stock_adjustments USING btree
+    ON requisitionbatch.batch_stock_adjustments USING btree
     (reasonid, requisitionlineitemid)
     TABLESPACE pg_default;
 
