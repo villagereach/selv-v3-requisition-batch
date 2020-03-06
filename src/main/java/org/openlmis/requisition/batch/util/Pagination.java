@@ -24,8 +24,8 @@ import org.springframework.data.domain.Pageable;
 public final class Pagination {
 
   /*
-    Because Spring itself uses 0 as the default pageNumber, this value probably shouldn't be changed
-   */
+     Because Spring itself uses 0 as the default pageNumber, this value probably shouldn't be changed
+    */
   public static final int DEFAULT_PAGE_NUMBER = 0;
 
   /*
@@ -69,6 +69,14 @@ public final class Pagination {
   }
 
   /**
+   * Return Page of the list using Page defaults.
+   * See {@link #getPage(List, Pageable)}
+   */
+  public static <T> Page<T> getPage(List<T> originalList) {
+    return getPage(originalList, null);
+  }
+
+  /**
    * Returns the Page for a subset of the specified list, determined by the pageable passed in.
    * @param originalList A list of values, some or all of which should be included in a page.
    * @param pageable An object used to encapsulate the pagination related values: page and size.
@@ -98,7 +106,7 @@ public final class Pagination {
 
     List<T> subList = originalList.subList(fromIndex, toIndex);
 
-    return getPage(subList, pageable, originalList.size());
+    return new PageImpl<>(subList, pageable, originalList.size());
   }
 
 
@@ -110,5 +118,4 @@ public final class Pagination {
   public static <T> Page<T> getPage(List<T> subList, Pageable pageable, long fullListSize) {
     return new PageImpl<>(subList, pageable, fullListSize);
   }
-
 }
