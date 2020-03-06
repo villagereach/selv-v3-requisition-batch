@@ -55,6 +55,27 @@ CREATE UNIQUE INDEX batch_req_prod_fac_per_node
 
 -- DROP TABLE requisitionbatch.batch_requisition_line_items;
 
+CREATE OR REPLACE FUNCTION batch_unique_status_changes() returns trigger LANGUAGE plpgsql AS $$
+BEGIN
+  DROP TABLE IF EXISTS batch_status_change_data;
+  CREATE TEMP TABLE batch_status_change_data AS
+  (
+      SELECT status, supervisorynodeid
+      FROM requisitionbatch.batch_status_changes
+      WHERE requisitionid = NEW.requisitionid
+      ORDER BY createddate DESC
+      LIMIT 2
+  );
+
+  IF EXISTS (SELECT 1 FROM batch_status_change_data GROUP BY status, supervisoryNodeId HAVING COUNT(*) > 1)
+  THEN
+    RAISE 'Duplicate status change: % at supervisory node: % ', NEW.status, NEW.supervisoryNodeId USING ERRCODE = 'unique_violation';
+  ELSE
+    RETURN NEW;
+  END IF;
+
+END $$;
+
 CREATE TABLE requisitionbatch.batch_requisition_line_items
 (
     id uuid NOT NULL,
@@ -65,7 +86,7 @@ CREATE TABLE requisitionbatch.batch_requisition_line_items
     calculatedorderquantity integer,
     maxperiodsofstock numeric(19,2),
     maximumstockquantity integer,
-    nonfullsupply boolean NOT NULL,
+    nonfullsupply boolean,
     numberofnewpatientsadded integer,
     orderableid uuid,
     packstoship bigint,
@@ -85,8 +106,11 @@ CREATE TABLE requisitionbatch.batch_requisition_line_items
     idealstockamount integer,
     calculatedorderquantityisa integer,
     additionalquantityrequired integer,
+    orderableversionnumber bigint,
+    facilitytypeapprovedproductid uuid,
+    facilitytypeapprovedproductversionnumber bigint,
     CONSTRAINT batch_requisition_line_items_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_batch_4sg1naierwgt9avsjcm76a2yl FOREIGN KEY (requisitionid)
+    CONSTRAINT batch_fk_4sg1naierwgt9avsjcm76a2yl FOREIGN KEY (requisitionid)
         REFERENCES requisitionbatch.batch_requisitions (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -144,27 +168,6 @@ CREATE INDEX batch_status_changes_requisitionid_idx
     (requisitionid)
     TABLESPACE pg_default;
 
-CREATE OR REPLACE FUNCTION batch_unique_status_changes() returns trigger LANGUAGE plpgsql AS $$
-BEGIN
-  DROP TABLE IF EXISTS batch_status_change_data;
-  CREATE TEMP TABLE batch_status_change_data AS
-  (
-      SELECT status, supervisorynodeid
-      FROM requisitionbatch.batch_status_changes
-      WHERE requisitionid = NEW.requisitionid
-      ORDER BY createddate DESC
-      LIMIT 2
-  );
-
-  IF EXISTS (SELECT 1 FROM batch_status_change_data GROUP BY status, supervisoryNodeId HAVING COUNT(*) > 1)
-  THEN
-    RAISE 'Duplicate status change: % at supervisory node: % ', NEW.status, NEW.supervisoryNodeId USING ERRCODE = 'unique_violation';
-  ELSE
-    RETURN NEW;
-  END IF;
-
-END $$;
-
 -- Trigger: batch_check_status_changes
 
 -- DROP TRIGGER batch_check_status_changes ON requisitionbatch.batch_status_changes;
@@ -195,12 +198,12 @@ CREATE TABLE requisitionbatch.batch_status_messages
     CONSTRAINT batch_status_change_id_unique UNIQUE (statuschangeid)
 
         DEFERRABLE INITIALLY DEFERRED,
-    CONSTRAINT fk_batch_hp6wryw9250cf3jhceddvmn5b FOREIGN KEY (requisitionid)
+    CONSTRAINT batch_fk_hp6wryw9250cf3jhceddvmn5b FOREIGN KEY (requisitionid)
         REFERENCES requisitionbatch.batch_requisitions (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
-    CONSTRAINT fk_batch_status_messages_status_change_id FOREIGN KEY (statuschangeid)
+    CONSTRAINT batch_fk_status_messages_status_change_id FOREIGN KEY (statuschangeid)
         REFERENCES requisitionbatch.batch_status_changes (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -225,7 +228,7 @@ CREATE TABLE requisitionbatch.batch_stock_adjustments
     reasonid uuid NOT NULL,
     requisitionlineitemid uuid,
     CONSTRAINT batch_stock_adjustments_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_batch_9nqi8imo7ty6jafeijhviynrt FOREIGN KEY (requisitionlineitemid)
+    CONSTRAINT batch_fk_9nqi8imo7ty6jafeijhviynrt FOREIGN KEY (requisitionlineitemid)
         REFERENCES requisitionbatch.batch_requisition_line_items (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -247,4 +250,3 @@ CREATE UNIQUE INDEX batch_req_line_reason
     ON requisitionbatch.batch_stock_adjustments USING btree
     (reasonid, requisitionlineitemid)
     TABLESPACE pg_default;
-
