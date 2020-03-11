@@ -20,6 +20,31 @@ import java.util.Arrays;
 public abstract class MessageKeys {
   private static final String DELIMITER = ".";
 
+  private static final String SERVICE_PREFIX = "requisitionBatch";
+  private static final String ERROR_PREFIX = join(SERVICE_PREFIX, "error");
+
+  private static final String AUTHENTICATION_ERROR = join(ERROR_PREFIX, "authentication");
+  public static final String ERROR_USER_NOT_FOUND = join(AUTHENTICATION_ERROR, "userCanNotBeFound");
+
+  public static final String SERVICE_ERROR = join(ERROR_PREFIX, "service");
+  public static final String ERROR_SERVICE_REQUIRED = join(SERVICE_ERROR, "required");
+  public static final String ERROR_SERVICE_OCCURRED = join(SERVICE_ERROR, "errorOccurred");
+
+  public static final String VALIDATION_ERROR = join(ERROR_PREFIX, "validation");
+  public static final String ERROR_INVALID_DATE_FORMAT = join(VALIDATION_ERROR,
+      "invalidDateFormat");
+  public static final String ERROR_INVALID_BOOLEAN_FORMAT = join(VALIDATION_ERROR,
+      "invalidBooleanFormat");
+  public static final String ERROR_INVALID_UUID_FORMAT = join(VALIDATION_ERROR,
+      "invalidUuidFormat");
+  public static final String ERROR_QUERY_INVALID_PARAMS = join(VALIDATION_ERROR,
+      ".query", "invalidParams");
+  public static final String ERROR_PROGRAM_ID_NOT_PROVIDED = join(VALIDATION_ERROR,
+      ".query", "programId", "notProvided");
+  public static final String ERROR_PROCESSING_PERIOD_ID_NOT_PROVIDED = join(VALIDATION_ERROR,
+      ".query", "processingPeriodId", "notProvided");
+
+
   private MessageKeys() {
     throw new UnsupportedOperationException();
   }

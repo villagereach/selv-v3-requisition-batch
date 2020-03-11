@@ -45,7 +45,7 @@ public class ValidationMessageException extends BaseMessageException {
    * @param message the message.
    * @param cause   the exception.
    */
-  public ValidationMessageException(Throwable cause, Message message) {
+  public ValidationMessageException(Message message, Throwable cause) {
     super(message, cause);
   }
 
