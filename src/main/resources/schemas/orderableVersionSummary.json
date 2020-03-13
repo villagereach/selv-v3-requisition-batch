@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "OrderableVersionSummary",
+  "description": "Orderable Version Summary.",
+  "properties": {
+    "versionNumber": {
+      "type": "integer",
+      "title": "versionNumber"
+    },
+    "stockOnHand": {
+      "type": "integer",
+      "title": "stockOnHand"
+    },
+    "requestedQuantity": {
+      "type": "integer",
+      "title": "requestedQuantity"
+    }
+  },
+  "required": [
+    "versionNumber",
+    "stockOnHand",
+    "requestedQuantity"
+  ]
+}

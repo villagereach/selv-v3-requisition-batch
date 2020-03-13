@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "RequisitionSummaryLineItem",
+  "description": "Requisition Summary Line Item.",
+  "properties": {
+    "orderable": {
+      "type": "object",
+      "$ref": "referenceObjectDto.json",
+      "title": "orderable"
+    },
+    "zoneSummaries": {
+      "type": "array",
+      "title": "zoneSummaries",
+      "items": {
+        "type": "object",
+        "$ref": "orderableZonalSummary.json"
+      },
+      "uniqueItems": false
+    }
+  },
+  "required": [
+    "orderable",
+    "zoneSummaries"
+  ]
+}

@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.batch;
+package org.openlmis.requisition.batch.web.summary;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "RequisitionSummaryDto",
+  "description": "Requisition Summary aggregated by geographic zones for given program and period.",
+  "properties": {
+    "program": {
+      "type": "object",
+      "$ref": "referenceObjectDto.json",
+      "title": "program"
+    },
+    "processingPeriod": {
+      "type": "object",
+      "$ref": "referenceObjectDto.json",
+      "title": "processingPeriod"
+    },
+    "lineItems": {
+      "type": "array",
+      "title": "lineItems",
+      "items": {
+        "type": "object",
+        "$ref": "requisitionSummaryLineItem.json"
+      },
+      "uniqueItems": false
+    }
+  },
+  "required": [
+    "program",
+    "processingPeriod",
+    "lineItems"
+  ]
+}

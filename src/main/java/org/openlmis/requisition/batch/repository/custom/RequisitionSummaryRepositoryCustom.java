@@ -13,26 +13,14 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.batch;
+package org.openlmis.requisition.batch.repository.custom;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
+import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-public final class OrderableZoneSummaryDto {
-  private ObjectReferenceDto geographicZone;
-  private List<OrderableVersionSummaryDto> orderableVersions;
-  private List<UUID> requisitionIds;
+public interface RequisitionSummaryRepositoryCustom {
+  List<RequisitionQueryLineItem> getRequisitionSummaries(
+      UUID processingPeriod, UUID program, Set<UUID> facilityIds);
 }

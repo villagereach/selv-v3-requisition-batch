@@ -13,25 +13,15 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.batch;
+package org.openlmis.requisition.batch.web.summary;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
+import org.openlmis.requisition.batch.testutils.EqualsContractTest;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-public final class RequisitionSummaryDto {
-  private ObjectReferenceDto program;
-  private ObjectReferenceDto processingPeriod;
-  private List<RequisitionSummaryLineItemDto> lineItems;
+public class RequisitionSummaryLineItemDtoTest
+    extends EqualsContractTest<RequisitionSummaryLineItemDto> {
+
+  @Override
+  protected Class<RequisitionSummaryLineItemDto> getTestClass() {
+    return RequisitionSummaryLineItemDto.class;
+  }
 }

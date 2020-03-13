@@ -18,10 +18,11 @@ schemas:
         "items": { "type": "object", "$ref": "schemas/auditLogEntry.json" }
     }
 
-
 - localizedErrorResponse: !include schemas/localizedErrorResponse.json
 
 - version: !include schemas/version.json
+
+- requisitionSummary: !include schemas/requisitionSummary.json
 
 traits:
 - secured:
@@ -135,4 +136,23 @@ resourceTypes:
             schema: version
 
 /api:
-
+  /requisitionSummaries:
+    get:
+      is: [ secured ]
+      description: Returns Requisition summary aggregated by geographic zones.
+      queryParameters:
+        processingPeriodId:
+          displayName: Processing Period Id
+          type: string
+          required: true
+          repeat: false
+        programId:
+          displayName: Program Id
+          type: string
+          required: true
+          repeat: false
+      responses:
+        "200":
+          body:
+            application/json:
+              schema: requisitionSummary

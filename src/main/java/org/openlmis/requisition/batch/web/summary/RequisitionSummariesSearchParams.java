@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.batch;
+package org.openlmis.requisition.batch.web.summary;
 
 import static java.util.Arrays.asList;
 import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_PROCESSING_PERIOD_ID_NOT_PROVIDED;
@@ -33,7 +33,7 @@ import org.springframework.util.MultiValueMap;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public final class RequisitionBatchSummarySearchParams {
+public final class RequisitionSummariesSearchParams {
 
   private static final String PROGRAM_ID = "programId";
   private static final String PROCESSING_PERIOD_ID = "processingPeriodId";
@@ -45,7 +45,7 @@ public final class RequisitionBatchSummarySearchParams {
   /**
    * Wraps map of query params into an object.
    */
-  public RequisitionBatchSummarySearchParams(MultiValueMap<String, String> queryMap) {
+  public RequisitionSummariesSearchParams(MultiValueMap<String, String> queryMap) {
     queryParams = new SearchParams(queryMap);
     validate();
   }

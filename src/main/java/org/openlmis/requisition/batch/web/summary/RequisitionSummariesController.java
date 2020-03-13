@@ -13,15 +13,9 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.batch;
+package org.openlmis.requisition.batch.web.summary;
 
-import static java.util.stream.Collectors.toList;
-
-import org.openlmis.requisition.batch.service.referencedata.PermissionService;
-import org.openlmis.requisition.batch.service.referencedata.PermissionStringDto;
-import org.openlmis.requisition.batch.service.referencedata.PermissionStrings;
-import org.openlmis.requisition.batch.service.referencedata.UserDto;
-import org.openlmis.requisition.batch.util.AuthenticationHelper;
+import org.openlmis.requisition.batch.service.summary.RequisitionSummaryService;
 import org.openlmis.requisition.batch.web.BaseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,41 +29,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("requisitionSummaries")
-public class RequisitionBatchFetchController extends BaseController {
+public class RequisitionSummariesController extends BaseController {
 
   private static final Logger LOGGER =
-      LoggerFactory.getLogger(RequisitionBatchFetchController.class);
+      LoggerFactory.getLogger(RequisitionSummariesController.class);
 
   @Autowired
-  private PermissionService permissionService;
-
-  @Autowired
-  private AuthenticationHelper authenticationHelper;
+  private RequisitionSummaryService requisitionSummaryService;
 
   /**
-   * Returns requisition data for given period and program
-   * aggregated by geographic zones of given level.
+   * Returns requisition data for given period and program aggregated by geographic zones.
+   * Response is prepared and filtered using query params and user permissions.
+   *
+   * @param  queryParams request parameters
+   * @return             build requisition summary
    */
   @GetMapping
   public RequisitionSummaryDto getRequisitionSummary(
       @RequestParam MultiValueMap<String, String> queryParams) {
 
-    Profiler profiler = new Profiler("REQUISITION_SERVICE_SEARCH");
+    Profiler profiler = new Profiler("REQUISITION_SUMMARY_CONTROLLER_GET");
     profiler.setLogger(LOGGER);
 
     profiler.start("GET_QUERY_PARAMS");
-    new RequisitionBatchSummarySearchParams(queryParams);
+    RequisitionSummariesSearchParams params =
+        new RequisitionSummariesSearchParams(queryParams);
 
-    profiler.start("GET_USER");
-    UserDto user = authenticationHelper.getCurrentUser();
+    profiler.start("GET_RESPONSE_FROM_SERVICE");
+    RequisitionSummaryDto result = requisitionSummaryService.getRequisitionSummary(params);
 
-    profiler.start("GET_PERM_STRINGS");
-    PermissionStrings.Handler handler = permissionService.getPermissionStrings(user.getId());
-    handler.get()
-        .stream()
-        .map(PermissionStringDto::toString)
-        .collect(toList());
-
-    return new RequisitionSummaryDto();
+    profiler.stop().log();
+    return result;
   }
 }

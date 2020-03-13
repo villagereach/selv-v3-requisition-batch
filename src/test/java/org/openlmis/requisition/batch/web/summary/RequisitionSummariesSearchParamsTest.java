@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.batch;
+package org.openlmis.requisition.batch.web.summary;
 
 import static org.junit.Assert.assertEquals;
 import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_PROGRAM_ID_NOT_PROVIDED;
@@ -29,8 +29,8 @@ import org.openlmis.requisition.batch.exception.ValidationMessageException;
 import org.openlmis.requisition.batch.testutils.ToStringContractTest;
 import org.springframework.util.LinkedMultiValueMap;
 
-public class RequisitionBatchSummarySearchParamsTest
-    extends ToStringContractTest<RequisitionBatchSummarySearchParams> {
+public class RequisitionSummariesSearchParamsTest
+    extends ToStringContractTest<RequisitionSummariesSearchParams> {
 
   @Rule
   public ExpectedException exception = ExpectedException.none();
@@ -50,8 +50,8 @@ public class RequisitionBatchSummarySearchParamsTest
   }
 
   @Override
-  protected Class<RequisitionBatchSummarySearchParams> getTestClass() {
-    return RequisitionBatchSummarySearchParams.class;
+  protected Class<RequisitionSummariesSearchParams> getTestClass() {
+    return RequisitionSummariesSearchParams.class;
   }
 
   @Test
@@ -60,14 +60,14 @@ public class RequisitionBatchSummarySearchParamsTest
     exception.expectMessage(ERROR_QUERY_INVALID_PARAMS);
 
     queryMap.add("some-param", "some-value");
-    new RequisitionBatchSummarySearchParams(queryMap);
+    new RequisitionSummariesSearchParams(queryMap);
   }
 
   @Test
   public void shouldReturnValueForKeyProgramId() {
     queryMap.add(PROGRAM_ID, id2.toString());
-    RequisitionBatchSummarySearchParams searchParams =
-        new RequisitionBatchSummarySearchParams(queryMap);
+    RequisitionSummariesSearchParams searchParams =
+        new RequisitionSummariesSearchParams(queryMap);
 
     assertEquals(id1, searchParams.getProgramId());
   }
@@ -75,8 +75,8 @@ public class RequisitionBatchSummarySearchParamsTest
   @Test
   public void shouldThrowExceptionIfParameterHasNoUuidFormat() {
     queryMap.add(PROGRAM_ID, "test");
-    RequisitionBatchSummarySearchParams searchParams =
-        new RequisitionBatchSummarySearchParams(queryMap);
+    RequisitionSummariesSearchParams searchParams =
+        new RequisitionSummariesSearchParams(queryMap);
 
     assertEquals(id1, searchParams.getProgramId());
   }
@@ -87,10 +87,10 @@ public class RequisitionBatchSummarySearchParamsTest
     exception.expectMessage(ERROR_PROGRAM_ID_NOT_PROVIDED);
 
     queryMap.remove(PROGRAM_ID);
-    new RequisitionBatchSummarySearchParams(queryMap);
+    new RequisitionSummariesSearchParams(queryMap);
   }
 
-  protected void prepare(ToStringVerifier<RequisitionBatchSummarySearchParams> verifier) {
+  protected void prepare(ToStringVerifier<RequisitionSummariesSearchParams> verifier) {
     verifier.ignore("PROGRAM_ID", "PROCESSING_PERIOD_ID", "ALL_PARAMETERS");
   }
 }
