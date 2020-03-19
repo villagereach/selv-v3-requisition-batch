@@ -2,14 +2,14 @@
   "service": {
     "Name": "requisition-batch",
     "Port": 8080,
-    "Tags": ["requisition-batch-service"]
+    "Tags": ["openlmis-service"]
   },
   "raml": "src/main/resources/api-definition.yaml",
   "path": [
-    "requisition-batch",
-    "requisition-batch/docs",
-    "requisition-batch/docs/<all>",
-    "requisition-batch/webjars",
-    "requisition-batch/webjars/<all>"
+    "requisitionBatch",
+    "requisitionBatch/docs",
+    "requisitionBatch/docs/<all>",
+    "requisitionBatch/webjars",
+    "requisitionBatch/webjars/<all>"
   ]
 }
