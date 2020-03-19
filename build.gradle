@@ -124,6 +124,18 @@ task integrationTest(type: Test) {
     environment 'BASE_URL', "http://localhost"
 }
 
+task flywayTest(type: Test) {
+    mustRunAfter integrationTest
+    //testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+
+    include '**/migration/**'
+}
+
 tasks.withType(Test) {
     reports.html.destination = file("${reporting.baseDir}/${name}")
     reports.junitXml.destination = file("${testResultsDir}/${name}")
