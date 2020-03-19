@@ -37,7 +37,7 @@ public class RequisitionSummaryBuilder {
 
   private static final String PROCESSING_PERIODS_RESOURCE = "processingPeriods";
   private static final String PROGRAMS_RESOURCE = "programs";
-  private static final String ORDERABLES_RESOURCE = "programs";
+  private static final String ORDERABLES_RESOURCE = "orderables";
 
   @Value("${service.url}")
   private String serviceUrl;

@@ -18,7 +18,7 @@ package org.openlmis.requisition.batch.web.summary;
 import static java.util.Arrays.asList;
 import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_PROCESSING_PERIOD_ID_NOT_PROVIDED;
 import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_PROGRAM_ID_NOT_PROVIDED;
-import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_QUERY_INVALID_PARAMS;
+import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_SUMMARY_QUERY_INVALID_PARAMS;
 
 import java.util.List;
 import java.util.UUID;
@@ -80,7 +80,7 @@ public final class RequisitionSummariesSearchParams {
    */
   public void validate() {
     if (!ALL_PARAMETERS.containsAll(queryParams.keySet())) {
-      throw new ValidationMessageException(new Message(ERROR_QUERY_INVALID_PARAMS));
+      throw new ValidationMessageException(new Message(ERROR_SUMMARY_QUERY_INVALID_PARAMS));
     }
     if (!queryParams.containsKey(PROGRAM_ID)) {
       throw new ValidationMessageException(new Message(ERROR_PROGRAM_ID_NOT_PROVIDED));

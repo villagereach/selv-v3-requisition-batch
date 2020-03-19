@@ -31,9 +31,10 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.PostgresUUIDType;
 import org.hibernate.type.StringType;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
-import org.openlmis.requisition.batch.repository.custom.RequisitionSummaryRepositoryCustom;
+import org.springframework.stereotype.Repository;
 
-public class RequisitionSummaryRepositoryCustomImpl implements RequisitionSummaryRepositoryCustom {
+@Repository
+public class RequisitionSummaryRepositoryCustomImpl {
 
   private static final String REQUISITION_SUMMARY_SQL = "SELECT z.name AS districtname,"
       + " li.orderableid, li.orderableversionnumber,"

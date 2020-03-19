@@ -47,7 +47,6 @@ public class RequisitionSummariesController extends BaseController {
   @GetMapping
   public RequisitionSummaryDto getRequisitionSummary(
       @RequestParam MultiValueMap<String, String> queryParams) {
-
     Profiler profiler = new Profiler("REQUISITION_SUMMARY_CONTROLLER_GET");
     profiler.setLogger(LOGGER);
 

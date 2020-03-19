@@ -156,3 +156,6 @@ resourceTypes:
           body:
             application/json:
               schema: requisitionSummary
+        "401":
+          body:
+            application/json:

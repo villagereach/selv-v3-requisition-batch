@@ -20,6 +20,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -36,18 +37,19 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openlmis.requisition.batch.domain.BaseEntity;
-import org.openlmis.requisition.batch.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@DirtiesContext
 @ActiveProfiles("test")
 @SuppressWarnings({"PMD.TooManyMethods"})
 public abstract class BaseWebIntegrationTest {
@@ -59,9 +61,6 @@ public abstract class BaseWebIntegrationTest {
 
   static final String RAML_ASSERT_MESSAGE = "HTTP request/response should match RAML definition.";
 
-  static final String MESSAGE_KEY = "messageKey";
-  static final String ID = "id";
-
   RestAssuredClient restAssured;
 
   private static final RamlDefinition ramlDefinition =
@@ -69,7 +68,7 @@ public abstract class BaseWebIntegrationTest {
 
   private static final String MOCK_USER_CHECK_RESULT = "{\n"
       + "  \"aud\": [\n"
-      + "    \"template\"\n"
+      + "    \"requisition-batch\"\n"
       + "  ],\n"
       + "  \"user_name\": \"admin\",\n"
       + "  \"referenceDataUserId\": \"35316636-6264-6331-2d34-3933322d3462\",\n"
@@ -79,17 +78,13 @@ public abstract class BaseWebIntegrationTest {
       + "  \"client_id\": \"user-client\"\n"
       + "}";
 
-  private static final String MOCK_CLIENT_CHECK_RESULT = "{\n"
-      + "  \"aud\": [\n"
-      + "    \"template\"\n"
-      + "  ],\n"
-      + "  \"scope\": [\"read\", \"write\"],\n"
-      + "  \"exp\": 1474500343,\n"
-      + "  \"authorities\": [\"TRUSTED_CLIENT\"],\n"
-      + "  \"client_id\": \"trusted-client\"\n"
+  public static final String MOCK_TOKEN_REQUEST_RESPONSE = "{"
+      + "  \"access_token\": \"418c89c5-7f21-4cd1-a63a-38c47892b0fe\",\n"
+      + "  \"token_type\": \"bearer\",\n"
+      + "  \"expires_in\": 847,\n"
+      + "  \"scope\": \"read write\",\n"
+      + "  \"referenceDataUserId\": \"35316636-6264-6331-2d34-3933322d3462\"\n"
       + "}";
-
-  Pageable pageable = new PageRequest(Pagination.DEFAULT_PAGE_NUMBER, 2000);
 
   @Value("${service.url}")
   private String baseUri;
@@ -107,7 +102,6 @@ public abstract class BaseWebIntegrationTest {
    * Constructor for test.
    */
   BaseWebIntegrationTest() {
-
     // This mocks the auth check to always return valid admin credentials.
     wireMockRule.stubFor(post(urlEqualTo("/api/oauth/check_token"))
         .withRequestBody(equalTo("token=" + USER_ACCESS_TOKEN))
@@ -115,22 +109,11 @@ public abstract class BaseWebIntegrationTest {
             .withHeader("Content-Type", "application/json")
             .withBody(MOCK_USER_CHECK_RESULT)));
 
-    // This mocks the auth check to always return valid trusted client credentials.
-    wireMockRule.stubFor(post(urlEqualTo("/api/oauth/check_token"))
-        .withRequestBody(equalTo("token=" + CLIENT_ACCESS_TOKEN))
+    // This mocks the auth token request response
+    wireMockRule.stubFor(post(urlPathEqualTo("/api/oauth/token?grant_type=client_credentials"))
         .willReturn(aResponse()
-            .withHeader("Content-Type", "application/json")
-            .withBody(MOCK_CLIENT_CHECK_RESULT)));
-
-    // This mocks the call to auth to post to an auth user.
-    wireMockRule.stubFor(post(urlPathEqualTo("/api/users/auth"))
-        .willReturn(aResponse()
-            .withStatus(200)));
-
-    // This mocks the call to notification to post a notification.
-    wireMockRule.stubFor(post(urlPathEqualTo("/api/notification"))
-        .willReturn(aResponse()
-            .withStatus(200)));
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .withBody(MOCK_TOKEN_REQUEST_RESPONSE)));
   }
 
   /**

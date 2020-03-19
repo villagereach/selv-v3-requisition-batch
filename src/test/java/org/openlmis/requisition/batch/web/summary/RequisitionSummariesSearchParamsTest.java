@@ -17,7 +17,7 @@ package org.openlmis.requisition.batch.web.summary;
 
 import static org.junit.Assert.assertEquals;
 import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_PROGRAM_ID_NOT_PROVIDED;
-import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_QUERY_INVALID_PARAMS;
+import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_SUMMARY_QUERY_INVALID_PARAMS;
 
 import be.joengenduvel.java.verifiers.ToStringVerifier;
 import java.util.UUID;
@@ -57,7 +57,7 @@ public class RequisitionSummariesSearchParamsTest
   @Test
   public void shouldThrowExceptionIfThereIsUnknownParameterInParameters() {
     exception.expect(ValidationMessageException.class);
-    exception.expectMessage(ERROR_QUERY_INVALID_PARAMS);
+    exception.expectMessage(ERROR_SUMMARY_QUERY_INVALID_PARAMS);
 
     queryMap.add("some-param", "some-value");
     new RequisitionSummariesSearchParams(queryMap);

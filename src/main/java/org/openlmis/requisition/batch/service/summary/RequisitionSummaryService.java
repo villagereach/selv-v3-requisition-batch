@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
-import org.openlmis.requisition.batch.repository.RequisitionSummaryRepository;
+import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
 import org.openlmis.requisition.batch.service.referencedata.PermissionService;
 import org.openlmis.requisition.batch.service.referencedata.PermissionStringDto;
 import org.openlmis.requisition.batch.service.referencedata.PermissionStrings;
@@ -38,8 +38,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class RequisitionSummaryService {
 
-  private static final Logger LOGGER =
-      LoggerFactory.getLogger(RequisitionSummaryService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RequisitionSummaryService.class);
+
+  private static final String REQUISITION_APPROVE_RIGHT = "REQUISITION_APPROVE";
 
   @Autowired
   private PermissionService permissionService;
@@ -51,7 +52,7 @@ public class RequisitionSummaryService {
   private RequisitionSummaryBuilder requisitionSummaryBuilder;
 
   @Autowired
-  private RequisitionSummaryRepository requisitionSummaryRepository;
+  private RequisitionSummaryRepositoryCustomImpl requisitionSummaryRepository;
 
   /**
    * Fetches requisition summary data from db and builds response dto.
@@ -74,7 +75,7 @@ public class RequisitionSummaryService {
 
     profiler.start("FILTER_SUPERVISED_FACILITIES");
     Set<UUID> supervisedFacilitiesIds = permissionStrings.stream()
-        .filter(permission -> permission.getRightName().equals("REQUISITION_APPROVE"))
+        .filter(permission -> permission.getRightName().equals(REQUISITION_APPROVE_RIGHT))
         .filter(permission -> permission.getProgramId().equals(params.getProgramId()))
         .map(PermissionStringDto::getFacilityId)
         .collect(toSet());
