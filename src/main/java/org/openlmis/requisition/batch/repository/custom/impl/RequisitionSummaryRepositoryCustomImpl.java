@@ -42,8 +42,8 @@ public class RequisitionSummaryRepositoryCustomImpl {
       + " string_agg(cast(r.id as text), ',') AS requisitionids"
       + " FROM requisitionbatch.batch_requisitions AS r"
       + " LEFT JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
-      + " LEFT JOIN requisitionbatch.facilities AS f ON f.id = r.facilityid"
-      + " LEFT JOIN requisitionbatch.geographic_zones AS z ON z.id = f.geographiczoneid"
+      + " LEFT JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
+      + " LEFT JOIN requisitionbatch.batch_geographic_zones AS z ON z.id = f.geographiczoneid"
       + " WHERE f.id IN ('%s') AND r.processingperiodid = '%s' AND r.programid = '%s'"
       + " GROUP BY z.name, li.orderableid,"
       + " li.orderableversionnumber, r.processingperiodid, r.programid;";

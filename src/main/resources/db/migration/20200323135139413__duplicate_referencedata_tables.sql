@@ -1,8 +1,8 @@
--- Table: requisitionbatch.geographic_levels
+-- Table: requisitionbatch.batch_geographic_levels
 
--- DROP TABLE requisitionbatch.geographic_levels;
+-- DROP TABLE requisitionbatch.batch_geographic_levels;
 
-CREATE TABLE requisitionbatch.geographic_levels
+CREATE TABLE requisitionbatch.batch_geographic_levels
 (
     id uuid NOT NULL,
     code text COLLATE pg_catalog."default" NOT NULL,
@@ -16,14 +16,14 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisitionbatch.geographic_levels
+ALTER TABLE requisitionbatch.batch_geographic_levels
     OWNER to postgres;
 
--- Table: requisitionbatch.geographic_zones
+-- Table: requisitionbatch.batch_geographic_zones
 
--- DROP TABLE requisitionbatch.geographic_zones;
+-- DROP TABLE requisitionbatch.batch_geographic_zones;
 
-CREATE TABLE requisitionbatch.geographic_zones
+CREATE TABLE requisitionbatch.batch_geographic_zones
 (
     id uuid NOT NULL,
     catchmentpopulation integer,
@@ -38,11 +38,11 @@ CREATE TABLE requisitionbatch.geographic_zones
     CONSTRAINT geographic_zones_pkey PRIMARY KEY (id),
     CONSTRAINT uk_jpns3ahywgm4k52rdfm08m9k0 UNIQUE (code),
     CONSTRAINT fk3wu6tbyjf7re179s3v57d0hqw FOREIGN KEY (levelid)
-        REFERENCES requisitionbatch.geographic_levels (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_geographic_levels (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT geographic_zones_parentid_fkey FOREIGN KEY (parentid)
-        REFERENCES requisitionbatch.geographic_zones (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_geographic_zones (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
@@ -51,14 +51,14 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisitionbatch.geographic_zones
+ALTER TABLE requisitionbatch.batch_geographic_zones
     OWNER to postgres;
 
--- Table: requisitionbatch.facility_operators
+-- Table: requisitionbatch.batch_facility_operators
 
--- DROP TABLE requisitionbatch.facility_operators;
+-- DROP TABLE requisitionbatch.batch_facility_operators;
 
-CREATE TABLE requisitionbatch.facility_operators
+CREATE TABLE requisitionbatch.batch_facility_operators
 (
     id uuid NOT NULL,
     code text COLLATE pg_catalog."default" NOT NULL,
@@ -73,14 +73,14 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisitionbatch.facility_operators
+ALTER TABLE requisitionbatch.batch_facility_operators
     OWNER to postgres;
 
--- Table: requisitionbatch.facility_types
+-- Table: requisitionbatch.batch_facility_types
 
--- DROP TABLE requisitionbatch.facility_types;
+-- DROP TABLE requisitionbatch.batch_facility_types;
 
-CREATE TABLE requisitionbatch.facility_types
+CREATE TABLE requisitionbatch.batch_facility_types
 (
     id uuid NOT NULL,
     active boolean,
@@ -95,23 +95,23 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisitionbatch.facility_types
+ALTER TABLE requisitionbatch.batch_facility_types
     OWNER to postgres;
 
 -- Index: unq_facility_type_code
 
--- DROP INDEX requisitionbatch.unq_facility_type_code;
+-- DROP INDEX requisitionbatch.batch_unq_facility_type_code;
 
 CREATE UNIQUE INDEX unq_facility_type_code
-    ON requisitionbatch.facility_types USING btree
+    ON requisitionbatch.batch_facility_types USING btree
     (lower(code) COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
 
--- Table: requisitionbatch.facilities
+-- Table: requisitionbatch.batch_facilities
 
--- DROP TABLE requisitionbatch.facilities;
+-- DROP TABLE requisitionbatch.batch_facilities;
 
-CREATE TABLE requisitionbatch.facilities
+CREATE TABLE requisitionbatch.batch_facilities
 (
     id uuid NOT NULL,
     active boolean NOT NULL,
@@ -130,15 +130,15 @@ CREATE TABLE requisitionbatch.facilities
     location geometry,
     CONSTRAINT facilities_pkey PRIMARY KEY (id),
     CONSTRAINT fk2vn7d69cbm7cl3m4rte8cy6ja FOREIGN KEY (geographiczoneid)
-        REFERENCES requisitionbatch.geographic_zones (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_geographic_zones (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT fkm12nqtk6paxb7b20m5rklm12w FOREIGN KEY (operatedbyid)
-        REFERENCES requisitionbatch.facility_operators (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_facility_operators (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT fkpc0soanvqabccyg5br9aexoc1 FOREIGN KEY (typeid)
-        REFERENCES requisitionbatch.facility_types (id) MATCH SIMPLE
+        REFERENCES requisitionbatch.batch_facility_types (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
@@ -147,54 +147,54 @@ WITH (
 )
 TABLESPACE pg_default;
 
-ALTER TABLE requisitionbatch.facilities
+ALTER TABLE requisitionbatch.batch_facilities
     OWNER to postgres;
 
 -- Index: facilities_geographiczoneid_idx
 
--- DROP INDEX requisitionbatch.facilities_geographiczoneid_idx;
+-- DROP INDEX requisitionbatch.batch_facilities_geographiczoneid_idx;
 
 CREATE INDEX facilities_geographiczoneid_idx
-    ON requisitionbatch.facilities USING btree
+    ON requisitionbatch.batch_facilities USING btree
     (geographiczoneid ASC NULLS LAST)
     TABLESPACE pg_default;
 
 
 -- Index: facilities_location_idx
 
--- DROP INDEX requisitionbatch.facilities_location_idx;
+-- DROP INDEX requisitionbatch.batch_facilities_location_idx;
 
 CREATE INDEX facilities_location_idx
-    ON requisitionbatch.facilities USING gist
+    ON requisitionbatch.batch_facilities USING gist
     (location)
     TABLESPACE pg_default;
 
 
 -- Index: facilities_operatedbyid_idx
 
--- DROP INDEX requisitionbatch.facilities_operatedbyid_idx;
+-- DROP INDEX requisitionbatch.batch_facilities_operatedbyid_idx;
 
 CREATE INDEX facilities_operatedbyid_idx
-    ON requisitionbatch.facilities USING btree
+    ON requisitionbatch.batch_facilities USING btree
     (operatedbyid ASC NULLS LAST)
     TABLESPACE pg_default;
 
 
 -- Index: facilities_typeid_idx
 
--- DROP INDEX requisitionbatch.facilities_typeid_idx;
+-- DROP INDEX requisitionbatch.batch_facilities_typeid_idx;
 
 CREATE INDEX facilities_typeid_idx
-    ON requisitionbatch.facilities USING btree
+    ON requisitionbatch.batch_facilities USING btree
     (typeid ASC NULLS LAST)
     TABLESPACE pg_default;
 
 
 -- Index: unq_facility_code
 
--- DROP INDEX requisitionbatch.unq_facility_code;
+-- DROP INDEX requisitionbatch.batch_unq_facility_code;
 
 CREATE UNIQUE INDEX unq_facility_code
-    ON requisitionbatch.facilities USING btree
+    ON requisitionbatch.batch_facilities USING btree
     (lower(code) COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
