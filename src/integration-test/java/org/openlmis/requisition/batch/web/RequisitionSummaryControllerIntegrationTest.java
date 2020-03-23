@@ -22,9 +22,7 @@ import static org.mockito.Matchers.eq;
 
 import guru.nidi.ramltester.junit.RamlMatchers;
 import java.util.UUID;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openlmis.requisition.batch.service.summary.RequisitionSummaryService;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryDtoDataBuilder;
@@ -61,11 +59,6 @@ public class RequisitionSummaryControllerIntegrationTest extends BaseWebIntegrat
         .willReturn(requisitionSummary);
   }
 
-  @After
-  public void tearDown() {
-    assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
-  }
-
   @Test
   public void shouldReturnUnauthorizedWithoutAuthorizationForCreateServiceAccountEndpoint() {
     restAssured
@@ -76,11 +69,12 @@ public class RequisitionSummaryControllerIntegrationTest extends BaseWebIntegrat
         .get(RESOURCE_URL)
         .then()
         .statusCode(401);
+
+    assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
   }
 
   @Test
-  @Ignore
-  public void shouldRetrieveServiceAccount() {
+  public void shouldRetrieveRequisitionSummary() {
     RequisitionSummaryDto response = restAssured
         .given()
         .header(HttpHeaders.AUTHORIZATION, getTokenHeader())
@@ -93,5 +87,29 @@ public class RequisitionSummaryControllerIntegrationTest extends BaseWebIntegrat
         .extract().as(RequisitionSummaryDto.class);
 
     assertThat(requisitionSummary, is(response));
+  }
+
+  @Test
+  public void shouldReturnBadRequestWhenProgramIdWasNotProvided() {
+    restAssured
+        .given()
+        .header(HttpHeaders.AUTHORIZATION, getTokenHeader())
+        .queryParameter(PROCESSING_PERIOD_ID, processingPeriodId)
+        .when()
+        .get(RESOURCE_URL)
+        .then()
+        .statusCode(400);
+  }
+
+  @Test
+  public void shouldReturnBadRequestWhenProcessingPeriodIdWasNotProvided() {
+    restAssured
+        .given()
+        .header(HttpHeaders.AUTHORIZATION, getTokenHeader())
+        .queryParameter(PROGRAM_ID, programId)
+        .when()
+        .get(RESOURCE_URL)
+        .then()
+        .statusCode(400);
   }
 }

@@ -16,20 +16,17 @@
 package org.openlmis.requisition.batch.web.summary;
 
 import org.openlmis.requisition.batch.service.summary.RequisitionSummaryService;
-import org.openlmis.requisition.batch.web.BaseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.profiler.Profiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("requisitionSummaries")
-public class RequisitionSummariesController extends BaseController {
+public class RequisitionSummariesController {
 
   private static final Logger LOGGER =
       LoggerFactory.getLogger(RequisitionSummariesController.class);
@@ -44,7 +41,7 @@ public class RequisitionSummariesController extends BaseController {
    * @param  queryParams request parameters
    * @return             build requisition summary
    */
-  @GetMapping
+  @GetMapping("api/requisitionSummaries")
   public RequisitionSummaryDto getRequisitionSummary(
       @RequestParam MultiValueMap<String, String> queryParams) {
     Profiler profiler = new Profiler("REQUISITION_SUMMARY_CONTROLLER_GET");
