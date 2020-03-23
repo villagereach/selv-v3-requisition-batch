@@ -68,7 +68,7 @@ public abstract class BaseWebIntegrationTest {
 
   private static final String MOCK_USER_CHECK_RESULT = "{\n"
       + "  \"aud\": [\n"
-      + "    \"requisition-batch\"\n"
+      + "    \"requisitionbatch\"\n"
       + "  ],\n"
       + "  \"user_name\": \"admin\",\n"
       + "  \"referenceDataUserId\": \"35316636-6264-6331-2d34-3933322d3462\",\n"

@@ -12,7 +12,7 @@
 
 rm -rf .tx
 tx init --host=https://www.transifex.com --user=$TRANSIFEX_USER --pass=$TRANSIFEX_PASSWORD
-tx set --auto-local -r openlmismz-requisition-batch.messages \
+tx set --auto-local -r selv-v3-requisition-batch.messages \
     'src/main/resources/messages_<lang>.properties' --source-lang en --type UNICODEPROPERTIES \
     --source-file src/main/resources/messages_en.properties --execute
 tx push -s
