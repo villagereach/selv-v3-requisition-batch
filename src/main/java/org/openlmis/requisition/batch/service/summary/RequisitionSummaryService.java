@@ -16,10 +16,13 @@
 package org.openlmis.requisition.batch.service.summary;
 
 import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_NO_APPROVE_PERMISSION;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.openlmis.requisition.batch.exception.PermissionMessageException;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
 import org.openlmis.requisition.batch.service.referencedata.PermissionService;
@@ -27,6 +30,7 @@ import org.openlmis.requisition.batch.service.referencedata.PermissionStringDto;
 import org.openlmis.requisition.batch.service.referencedata.PermissionStrings;
 import org.openlmis.requisition.batch.service.referencedata.UserDto;
 import org.openlmis.requisition.batch.util.AuthenticationHelper;
+import org.openlmis.requisition.batch.util.Message;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummariesSearchParams;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummaryDto;
 import org.slf4j.Logger;
@@ -79,6 +83,10 @@ public class RequisitionSummaryService {
         .filter(permission -> permission.getProgramId().equals(params.getProgramId()))
         .map(PermissionStringDto::getFacilityId)
         .collect(toSet());
+
+    if (isEmpty(supervisedFacilitiesIds)) {
+      throw new PermissionMessageException(new Message(ERROR_NO_APPROVE_PERMISSION));
+    }
 
     profiler.start("FIND_SUMMARY_IN_REPOSITORY");
     List<RequisitionQueryLineItem> requisitionSummaries = requisitionSummaryRepository

@@ -39,12 +39,12 @@ public class RequisitionSummaryRepositoryCustomImpl {
   private static final String REQUISITION_SUMMARY_SQL = "SELECT z.name AS districtname,"
       + " li.orderableid, li.orderableversionnumber,"
       + " SUM(li.requestedquantity) AS requestedquantity, SUM(li.stockonhand) AS stockonhand,"
-      + " string_agg(r.id::text, ',') AS requisitionids"
+      + " string_agg(cast(r.id as text), ',') AS requisitionids"
       + " FROM requisitionbatch.batch_requisitions AS r"
       + " LEFT JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
-      + " LEFT JOIN referencedata.facilities AS f ON f.id = r.facilityid"
-      + " LEFT JOIN referencedata.geographic_zones AS z ON z.id = f.geographiczoneid"
-      + " WHERE f.id IN (%s) AND r.processingperiodid = %s AND r.programid = %s"
+      + " LEFT JOIN requisitionbatch.facilities AS f ON f.id = r.facilityid"
+      + " LEFT JOIN requisitionbatch.geographic_zones AS z ON z.id = f.geographiczoneid"
+      + " WHERE f.id IN ('%s') AND r.processingperiodid = '%s' AND r.programid = '%s'"
       + " GROUP BY z.name, li.orderableid,"
       + " li.orderableversionnumber, r.processingperiodid, r.programid;";
 
@@ -63,7 +63,7 @@ public class RequisitionSummaryRepositoryCustomImpl {
       UUID programId, Set<UUID> facilityIds) {
     Query query = entityManager.createNativeQuery(
         String.format(REQUISITION_SUMMARY_SQL,
-            facilityIds.stream().map(UUID::toString).collect(joining(",")),
+            facilityIds.stream().map(UUID::toString).collect(joining("','")),
             processingPeriodId,
             programId));
     addScalars(query);

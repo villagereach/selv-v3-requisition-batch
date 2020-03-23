@@ -22,14 +22,18 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.requisition.batch.exception.PermissionMessageException;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
 import org.openlmis.requisition.batch.service.referencedata.PermissionService;
@@ -51,6 +55,9 @@ public class RequisitionSummaryServiceTest {
   private static final String REQUISITION_APPROVE_RIGHT = "REQUISITION_APPROVE";
   private static final String PROCESSING_PERIOD_ID = "processingPeriodId";
   private static final String PROGRAM_ID = "programId";
+
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
   @Mock
   private PermissionService permissionService;
@@ -102,5 +109,14 @@ public class RequisitionSummaryServiceTest {
   @Test
   public void shouldReturnRequisitionSummaryForParams() {
     assertThat(requisitionSummary, is(requisitionSummaryService.getRequisitionSummary(params)));
+  }
+
+  @Test
+  public void shouldThrowPermissionExceptionWhenUserIsLackingApproveRight() {
+    exception.expect(PermissionMessageException.class);
+
+    when(permissionStringsHandler.get()).thenReturn(new HashSet<>());
+
+    requisitionSummaryService.getRequisitionSummary(params);
   }
 }

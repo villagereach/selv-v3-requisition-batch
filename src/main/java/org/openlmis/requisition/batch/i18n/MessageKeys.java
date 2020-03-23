@@ -44,6 +44,8 @@ public abstract class MessageKeys {
   public static final String ERROR_PROCESSING_PERIOD_ID_NOT_PROVIDED = join(VALIDATION_ERROR,
       "query", "processingPeriodId", "notProvided");
 
+  private static final String PERMISSION_ERROR = join(ERROR_PREFIX, "permission");
+  public static final String ERROR_NO_APPROVE_PERMISSION = join(PERMISSION_ERROR, "approve");
 
   private MessageKeys() {
     throw new UnsupportedOperationException();
