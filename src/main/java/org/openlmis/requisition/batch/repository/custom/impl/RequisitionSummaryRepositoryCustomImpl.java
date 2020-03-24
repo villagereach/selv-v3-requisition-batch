@@ -41,9 +41,9 @@ public class RequisitionSummaryRepositoryCustomImpl {
       + " SUM(li.requestedquantity) AS requestedquantity, SUM(li.stockonhand) AS stockonhand,"
       + " string_agg(cast(r.id as text), ',') AS requisitionids"
       + " FROM requisitionbatch.batch_requisitions AS r"
-      + " LEFT JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
-      + " LEFT JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
-      + " LEFT JOIN requisitionbatch.batch_geographic_zones AS z ON z.id = f.geographiczoneid"
+      + " INNER JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
+      + " INNER JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
+      + " INNER JOIN requisitionbatch.batch_geographic_zones AS z ON z.id = f.geographiczoneid"
       + " WHERE f.id IN ('%s') AND r.processingperiodid = '%s' AND r.programid = '%s'"
       + " GROUP BY z.name, li.orderableid,"
       + " li.orderableversionnumber, r.processingperiodid, r.programid;";
