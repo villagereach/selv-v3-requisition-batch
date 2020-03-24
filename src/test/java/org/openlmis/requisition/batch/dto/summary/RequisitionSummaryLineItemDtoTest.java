@@ -13,14 +13,15 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.summary;
+package org.openlmis.requisition.batch.dto.summary;
 
 import org.openlmis.requisition.batch.testutils.EqualsContractTest;
 
-public class OrderableVersionSummaryDtoTest extends EqualsContractTest<OrderableVersionSummaryDto> {
+public class RequisitionSummaryLineItemDtoTest
+    extends EqualsContractTest<RequisitionSummaryLineItemDto> {
 
   @Override
-  protected Class<OrderableVersionSummaryDto> getTestClass() {
-    return OrderableVersionSummaryDto.class;
+  protected Class<RequisitionSummaryLineItemDto> getTestClass() {
+    return RequisitionSummaryLineItemDto.class;
   }
 }

@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.exception.PermissionMessageException;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
@@ -45,7 +46,6 @@ import org.openlmis.requisition.batch.testutils.RequisitionSummaryDtoDataBuilder
 import org.openlmis.requisition.batch.testutils.UserDtoDataBuilder;
 import org.openlmis.requisition.batch.util.AuthenticationHelper;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummariesSearchParams;
-import org.openlmis.requisition.batch.web.summary.RequisitionSummaryDto;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 

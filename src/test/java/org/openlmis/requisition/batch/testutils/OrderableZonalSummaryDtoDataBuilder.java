@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import org.openlmis.requisition.batch.web.summary.OrderableVersionSummaryDto;
-import org.openlmis.requisition.batch.web.summary.OrderableZonalSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableVersionSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
 
 public class OrderableZonalSummaryDtoDataBuilder {
 

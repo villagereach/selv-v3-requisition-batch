@@ -16,7 +16,7 @@
 package org.openlmis.requisition.batch.testutils;
 
 import java.util.Random;
-import org.openlmis.requisition.batch.web.summary.OrderableVersionSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableVersionSummaryDto;
 
 public class OrderableVersionSummaryDtoDataBuilder {
 

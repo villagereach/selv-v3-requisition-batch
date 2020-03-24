@@ -13,26 +13,15 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.requisition.batch.web.summary;
+package org.openlmis.requisition.batch.dto.summary;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
+import org.openlmis.requisition.batch.testutils.EqualsContractTest;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-public final class OrderableZonalSummaryDto {
-  private String districtName;
-  private List<OrderableVersionSummaryDto> orderableVersions;
-  private Set<UUID> requisitionIds;
+public class OrderableZonalSummaryDtoTest extends EqualsContractTest<OrderableZonalSummaryDto> {
+
+  @Override
+  protected Class<OrderableZonalSummaryDto> getTestClass() {
+    return OrderableZonalSummaryDto.class;
+  }
 }

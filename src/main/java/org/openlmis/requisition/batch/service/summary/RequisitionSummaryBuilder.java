@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableVersionSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryLineItemDto;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
-import org.openlmis.requisition.batch.web.summary.OrderableVersionSummaryDto;
-import org.openlmis.requisition.batch.web.summary.OrderableZonalSummaryDto;
-import org.openlmis.requisition.batch.web.summary.RequisitionSummaryDto;
-import org.openlmis.requisition.batch.web.summary.RequisitionSummaryLineItemDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

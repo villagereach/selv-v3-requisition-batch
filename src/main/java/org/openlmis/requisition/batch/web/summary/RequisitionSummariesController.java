@@ -15,6 +15,7 @@
 
 package org.openlmis.requisition.batch.web.summary;
 
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.service.summary.RequisitionSummaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

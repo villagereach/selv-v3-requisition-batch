@@ -22,6 +22,7 @@ import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_NO_APPROVE_P
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.exception.PermissionMessageException;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
@@ -32,7 +33,6 @@ import org.openlmis.requisition.batch.service.referencedata.UserDto;
 import org.openlmis.requisition.batch.util.AuthenticationHelper;
 import org.openlmis.requisition.batch.util.Message;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummariesSearchParams;
-import org.openlmis.requisition.batch.web.summary.RequisitionSummaryDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.profiler.Profiler;

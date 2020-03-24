@@ -30,13 +30,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.testutils.OrderableVersionSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.OrderableZonalSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionQueryLineItemDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryLineItemDtoDataBuilder;
-import org.openlmis.requisition.batch.web.summary.RequisitionSummaryDto;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(MockitoJUnitRunner.class)

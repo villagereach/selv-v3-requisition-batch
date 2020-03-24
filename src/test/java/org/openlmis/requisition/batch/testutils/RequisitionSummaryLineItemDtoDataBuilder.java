@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
-import org.openlmis.requisition.batch.web.summary.OrderableZonalSummaryDto;
-import org.openlmis.requisition.batch.web.summary.RequisitionSummaryLineItemDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryLineItemDto;
 
 public class RequisitionSummaryLineItemDtoDataBuilder {
 
