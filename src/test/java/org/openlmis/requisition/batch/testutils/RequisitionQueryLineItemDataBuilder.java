@@ -66,4 +66,14 @@ public class RequisitionQueryLineItemDataBuilder {
     this.orderableVersionNumber = number;
     return this;
   }
+
+  public RequisitionQueryLineItemDataBuilder withStockOnHand(Integer stockOnHand) {
+    this.stockOnHand = stockOnHand;
+    return this;
+  }
+
+  public RequisitionQueryLineItemDataBuilder withRequestedQuantity(Integer requestedQuantity) {
+    this.requestedQuantity = requestedQuantity;
+    return this;
+  }
 }

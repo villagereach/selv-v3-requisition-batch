@@ -154,6 +154,32 @@ public class RequisitionSummaryBuilderTest {
     assertThat(summary, is(result));
   }
 
+  @Test
+  public void shouldBuildWithNullSoh() {
+    requisitionSummaryBuilder.build(
+        newArrayList(new RequisitionQueryLineItemDataBuilder()
+            .withDistrictName(district1)
+            .withOrderableId(orderable1)
+            .withOrderableVersionNumber(1)
+            .withStockOnHand(null)
+            .build()),
+        programId,
+        processingPeriodId);
+  }
+
+  @Test
+  public void shouldBuildWithNullRequestedQuantity() {
+    requisitionSummaryBuilder.build(
+        newArrayList(new RequisitionQueryLineItemDataBuilder()
+            .withDistrictName(district1)
+            .withOrderableId(orderable1)
+            .withOrderableVersionNumber(1)
+            .withRequestedQuantity(null)
+            .build()),
+        programId,
+        processingPeriodId);
+  }
+
   private Set<UUID> toSet(List<UUID>... lists) {
     Set<UUID> result = new HashSet<>();
     Arrays.stream(lists).forEach(result::addAll);

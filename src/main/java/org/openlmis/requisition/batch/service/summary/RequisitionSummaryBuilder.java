@@ -93,9 +93,11 @@ public class RequisitionSummaryBuilder {
       List<RequisitionQueryLineItem> lineItems) {
     return new OrderableVersionSummaryDto(orderableVersion,
         lineItems.stream()
+            .filter(item -> item.getStockOnHand() != null)
             .mapToInt(RequisitionQueryLineItem::getStockOnHand)
             .sum(),
         lineItems.stream()
+            .filter(item -> item.getRequestedQuantity() != null)
             .mapToInt(RequisitionQueryLineItem::getRequestedQuantity)
             .sum());
   }
