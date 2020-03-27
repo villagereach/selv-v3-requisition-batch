@@ -32,4 +32,5 @@ public final class OrderableVersionSummaryDto {
   private Integer versionNumber;
   private Integer stockOnHand;
   private Integer requestedQuantity;
+  private Integer packsToShip;
 }

@@ -100,11 +100,13 @@ public class RequisitionSummaryBuilderTest {
                               .withRequestedQuantity(item1.getRequestedQuantity()
                                   + item2.getRequestedQuantity())
                               .withStockOnHand(item1.getStockOnHand() + item2.getStockOnHand())
+                              .withPacksToShip(item1.getPacksToShip() + item2.getPacksToShip())
                               .build(),
                           new OrderableVersionSummaryDtoDataBuilder()
                               .withVersionNumber(2)
                               .withRequestedQuantity(item3.getRequestedQuantity())
                               .withStockOnHand(item3.getStockOnHand())
+                              .withPacksToShip(item3.getPacksToShip())
                               .build()))
                       .withRequisitionIds(toSet(item1.getRequisitionIds(),
                           item2.getRequisitionIds(), item3.getRequisitionIds()))
@@ -117,6 +119,7 @@ public class RequisitionSummaryBuilderTest {
                               .withRequestedQuantity(item5.getRequestedQuantity()
                                   + item6.getRequestedQuantity())
                               .withStockOnHand(item5.getStockOnHand() + item6.getStockOnHand())
+                              .withPacksToShip(item5.getPacksToShip() + item6.getPacksToShip())
                               .build()))
                       .withRequisitionIds(toSet(item5.getRequisitionIds(),
                           item6.getRequisitionIds()))
@@ -132,6 +135,7 @@ public class RequisitionSummaryBuilderTest {
                               .withVersionNumber(1)
                               .withRequestedQuantity(item4.getRequestedQuantity())
                               .withStockOnHand(item4.getStockOnHand())
+                              .withPacksToShip(item4.getPacksToShip())
                               .build()))
                       .withRequisitionIds(toSet(item4.getRequisitionIds()))
                       .build()))
@@ -175,6 +179,19 @@ public class RequisitionSummaryBuilderTest {
             .withOrderableId(orderable1)
             .withOrderableVersionNumber(1)
             .withRequestedQuantity(null)
+            .build()),
+        programId,
+        processingPeriodId);
+  }
+
+  @Test
+  public void shouldBuildWithNullPacksToShip() {
+    requisitionSummaryBuilder.build(
+        newArrayList(new RequisitionQueryLineItemDataBuilder()
+            .withDistrictName(district1)
+            .withOrderableId(orderable1)
+            .withOrderableVersionNumber(1)
+            .withPacksToShip(null)
             .build()),
         programId,
         processingPeriodId);

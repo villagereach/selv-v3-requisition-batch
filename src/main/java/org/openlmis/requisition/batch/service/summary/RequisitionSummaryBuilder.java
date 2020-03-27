@@ -99,6 +99,10 @@ public class RequisitionSummaryBuilder {
         lineItems.stream()
             .filter(item -> item.getRequestedQuantity() != null)
             .mapToInt(RequisitionQueryLineItem::getRequestedQuantity)
+            .sum(),
+        lineItems.stream()
+            .filter(item -> item.getPacksToShip() != null)
+            .mapToInt(RequisitionQueryLineItem::getPacksToShip)
             .sum());
   }
 }

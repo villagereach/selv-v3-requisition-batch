@@ -29,6 +29,7 @@ public class RequisitionQueryLineItemDataBuilder {
   private UUID orderableId;
   private Integer orderableVersionNumber;
   private Integer requestedQuantity;
+  private Integer packsToShip;
   private Integer stockOnHand;
   private List<UUID> requisitionIds;
 
@@ -42,6 +43,7 @@ public class RequisitionQueryLineItemDataBuilder {
     orderableId = UUID.randomUUID();
     orderableVersionNumber = 1;
     requestedQuantity = new Random().nextInt(100);
+    packsToShip = new Random().nextInt(100);
     stockOnHand = new Random().nextInt(100);
     requisitionIds = new ArrayList<>();
     requisitionIds.add(UUID.randomUUID());
@@ -49,7 +51,7 @@ public class RequisitionQueryLineItemDataBuilder {
 
   public RequisitionQueryLineItem build() {
     return new RequisitionQueryLineItem(districtName, orderableId, orderableVersionNumber,
-        requestedQuantity, stockOnHand, requisitionIds);
+        requestedQuantity, stockOnHand, packsToShip, requisitionIds);
   }
 
   public RequisitionQueryLineItemDataBuilder withDistrictName(String districtName) {
@@ -74,6 +76,11 @@ public class RequisitionQueryLineItemDataBuilder {
 
   public RequisitionQueryLineItemDataBuilder withRequestedQuantity(Integer requestedQuantity) {
     this.requestedQuantity = requestedQuantity;
+    return this;
+  }
+
+  public RequisitionQueryLineItemDataBuilder withPacksToShip(Integer packsToShip) {
+    this.packsToShip = packsToShip;
     return this;
   }
 }

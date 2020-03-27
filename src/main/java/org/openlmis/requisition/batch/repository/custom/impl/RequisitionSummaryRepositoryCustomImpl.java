@@ -39,7 +39,7 @@ public class RequisitionSummaryRepositoryCustomImpl {
   private static final String REQUISITION_SUMMARY_SQL = "SELECT z.name AS districtname,"
       + " li.orderableid, li.orderableversionnumber,"
       + " SUM(li.requestedquantity) AS requestedquantity, SUM(li.stockonhand) AS stockonhand,"
-      + " string_agg(cast(r.id as text), ',') AS requisitionids"
+      + " SUM(li.packsToShip) AS packstoship, string_agg(cast(r.id as text), ',') AS requisitionids"
       + " FROM requisitionbatch.batch_requisitions AS r"
       + " INNER JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
       + " INNER JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
@@ -73,8 +73,8 @@ public class RequisitionSummaryRepositoryCustomImpl {
   private List<RequisitionQueryLineItem> toQueryLineItems(List<Object[]> result) {
     return result.stream()
         .map(fields -> new RequisitionQueryLineItem((String) fields[0], (UUID) fields[1],
-            (Integer) fields[2], (Integer) fields[3], (Integer) fields[4],
-            Arrays.stream(((String) fields[5]).split(","))
+            (Integer) fields[2], (Integer) fields[3], (Integer) fields[4], (Integer) fields[5],
+            Arrays.stream(((String) fields[6]).split(","))
                 .map(UUID::fromString)
                 .collect(toList())
         ))
@@ -88,6 +88,7 @@ public class RequisitionSummaryRepositoryCustomImpl {
     sql.addScalar("orderableversionnumber", IntegerType.INSTANCE);
     sql.addScalar("requestedquantity", IntegerType.INSTANCE);
     sql.addScalar("stockonhand", IntegerType.INSTANCE);
+    sql.addScalar("packstoship", IntegerType.INSTANCE);
     sql.addScalar("requisitionids", StringType.INSTANCE);
   }
 }

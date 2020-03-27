@@ -23,6 +23,7 @@ public class OrderableVersionSummaryDtoDataBuilder {
   private Integer versionNumber;
   private Integer stockOnHand;
   private Integer requestedQuantity;
+  private Integer packsToShip;
 
   /**
    * Used for creating new instance of {@link OrderableVersionSummaryDto}.
@@ -31,10 +32,12 @@ public class OrderableVersionSummaryDtoDataBuilder {
     versionNumber = 0;
     stockOnHand = new Random().nextInt(100);
     requestedQuantity = new Random().nextInt(100);
+    packsToShip = new Random().nextInt(100);
   }
 
   public OrderableVersionSummaryDto build() {
-    return new OrderableVersionSummaryDto(versionNumber, stockOnHand, requestedQuantity);
+    return new OrderableVersionSummaryDto(
+        versionNumber, stockOnHand, requestedQuantity, packsToShip);
   }
 
   public OrderableVersionSummaryDtoDataBuilder withVersionNumber(int versionNumber) {
@@ -49,6 +52,11 @@ public class OrderableVersionSummaryDtoDataBuilder {
 
   public OrderableVersionSummaryDtoDataBuilder withRequestedQuantity(int requestedQuantity) {
     this.requestedQuantity = requestedQuantity;
+    return this;
+  }
+
+  public OrderableVersionSummaryDtoDataBuilder withPacksToShip(int packsToShip) {
+    this.packsToShip = packsToShip;
     return this;
   }
 }
