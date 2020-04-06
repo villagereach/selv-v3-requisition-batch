@@ -38,8 +38,11 @@ public class RequisitionSummaryRepositoryCustomImpl {
 
   private static final String REQUISITION_SUMMARY_SQL = "SELECT z.name AS districtname,"
       + " li.orderableid, li.orderableversionnumber,"
-      + " SUM(li.requestedquantity) AS requestedquantity, SUM(li.stockonhand) AS stockonhand,"
-      + " SUM(li.packsToShip) AS packstoship, string_agg(cast(r.id as text), ',') AS requisitionids"
+      + " SUM(li.requestedquantity) AS requestedquantity,"
+      + " SUM(li.stockonhand) AS stockonhand,"
+      + " SUM(li.packsToShip) AS packstoship,"
+      + " string_agg(cast(r.id as text), ',') AS requisitionids,"
+      + " string_agg(cast(r.supervisorynodeid as text), ',') AS supervisorynodeids"
       + " FROM requisitionbatch.batch_requisitions AS r"
       + " INNER JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
       + " INNER JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
@@ -76,6 +79,9 @@ public class RequisitionSummaryRepositoryCustomImpl {
             (Integer) fields[2], (Integer) fields[3], (Integer) fields[4], (Integer) fields[5],
             Arrays.stream(((String) fields[6]).split(","))
                 .map(UUID::fromString)
+                .collect(toList()),
+            Arrays.stream(((String) fields[6]).split(","))
+                .map(UUID::fromString)
                 .collect(toList())
         ))
         .collect(toList());
@@ -90,5 +96,6 @@ public class RequisitionSummaryRepositoryCustomImpl {
     sql.addScalar("stockonhand", IntegerType.INSTANCE);
     sql.addScalar("packstoship", IntegerType.INSTANCE);
     sql.addScalar("requisitionids", StringType.INSTANCE);
+    sql.addScalar("supervisorynodeids", StringType.INSTANCE);
   }
 }

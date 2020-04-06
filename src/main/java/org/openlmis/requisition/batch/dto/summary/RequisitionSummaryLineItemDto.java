@@ -15,7 +15,7 @@
 
 package org.openlmis.requisition.batch.dto.summary;
 
-import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,5 +32,5 @@ import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
 @EqualsAndHashCode
 public final class RequisitionSummaryLineItemDto {
   private ObjectReferenceDto orderable;
-  private List<OrderableZonalSummaryDto> zoneSummaries;
+  private Map<String, OrderableDistrictSummaryDto> districtSummaries;
 }

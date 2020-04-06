@@ -16,6 +16,9 @@
 package org.openlmis.requisition.batch.dto.summary;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,4 +37,6 @@ public final class RequisitionSummaryDto {
   private ObjectReferenceDto program;
   private ObjectReferenceDto processingPeriod;
   private List<RequisitionSummaryLineItemDto> lineItems;
+  private Map<String, Set<UUID>> districtRequisitionIds;
+  private Map<String, Set<UUID>> districtSupervisoryNodeIds;
 }

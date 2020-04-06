@@ -32,6 +32,7 @@ public class RequisitionQueryLineItemDataBuilder {
   private Integer packsToShip;
   private Integer stockOnHand;
   private List<UUID> requisitionIds;
+  private List<UUID> supervisoryNodeIds;
 
   /**
    * Used for creating new instance of {@link RequisitionQueryLineItem}.
@@ -47,11 +48,13 @@ public class RequisitionQueryLineItemDataBuilder {
     stockOnHand = new Random().nextInt(100);
     requisitionIds = new ArrayList<>();
     requisitionIds.add(UUID.randomUUID());
+    supervisoryNodeIds = new ArrayList<>();
+    supervisoryNodeIds.add(UUID.randomUUID());
   }
 
   public RequisitionQueryLineItem build() {
     return new RequisitionQueryLineItem(districtName, orderableId, orderableVersionNumber,
-        requestedQuantity, stockOnHand, packsToShip, requisitionIds);
+        requestedQuantity, stockOnHand, packsToShip, requisitionIds, supervisoryNodeIds);
   }
 
   public RequisitionQueryLineItemDataBuilder withDistrictName(String districtName) {

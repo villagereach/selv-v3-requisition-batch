@@ -7,26 +7,56 @@
     "program": {
       "type": "object",
       "$ref": "referenceObjectDto.json",
-      "title": "program"
+      "title": "Program Reference"
     },
     "processingPeriod": {
       "type": "object",
       "$ref": "referenceObjectDto.json",
-      "title": "processingPeriod"
+      "title": "Processing Period Reference"
     },
     "lineItems": {
       "type": "array",
-      "title": "lineItems",
+      "title": "Requisition Summary Line Items",
       "items": {
         "type": "object",
         "$ref": "requisitionSummaryLineItem.json"
       },
       "uniqueItems": false
+    },
+    "districtRequisitionIds": {
+      "type": "object",
+      "title": "District Requisition Ids",
+      "patternProperties": {
+        ".*": {
+          "type": "array",
+          "title": "Requisition Ids",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "districtSupervisoryNodeIds": {
+      "type": "object",
+      "title": "District Supervisory Node Ids",
+      "patternProperties": {
+        ".*": {
+          "type": "array",
+          "title": "Supervisory Node Ids",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
     }
   },
   "required": [
     "program",
     "processingPeriod",
-    "lineItems"
+    "lineItems",
+    "districtRequisitionIds",
+    "districtSupervisoryNodeIds"
   ]
 }

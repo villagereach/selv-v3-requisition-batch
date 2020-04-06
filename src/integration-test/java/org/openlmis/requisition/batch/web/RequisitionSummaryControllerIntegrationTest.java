@@ -87,6 +87,7 @@ public class RequisitionSummaryControllerIntegrationTest extends BaseWebIntegrat
         .extract().as(RequisitionSummaryDto.class);
 
     assertThat(requisitionSummary, is(response));
+    assertThat(RAML_ASSERT_MESSAGE, restAssured.getLastReport(), RamlMatchers.hasNoViolations());
   }
 
   @Test

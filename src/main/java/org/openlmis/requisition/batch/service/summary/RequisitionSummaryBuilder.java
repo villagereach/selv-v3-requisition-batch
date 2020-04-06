@@ -17,15 +17,16 @@ package org.openlmis.requisition.batch.service.summary;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableDistrictSummaryDto;
 import org.openlmis.requisition.batch.dto.summary.OrderableVersionSummaryDto;
-import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryLineItemDto;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
@@ -59,34 +60,44 @@ public class RequisitionSummaryBuilder {
                 groupingBy(RequisitionQueryLineItem::getDistrictName,
                     groupingBy(RequisitionQueryLineItem::getOrderableVersionNumber, toList()))));
 
+    Map<String, List<RequisitionQueryLineItem>> groupedByDistricts =
+        lineItems.stream()
+            .collect(groupingBy(RequisitionQueryLineItem::getDistrictName, toList()));
+
     return new RequisitionSummaryDto(
         new ObjectReferenceDto(programId, serviceUrl, PROGRAMS_RESOURCE),
         new ObjectReferenceDto(processingPeriodId, serviceUrl, PROCESSING_PERIODS_RESOURCE),
         groupedLineItems.entrySet().stream()
             .map(entry -> build(entry.getKey(), entry.getValue()))
-            .collect(toList()));
+            .collect(toList()),
+        groupedByDistricts.entrySet().stream()
+            .collect(toMap(
+                Entry::getKey,
+                entry -> entry.getValue().stream()
+                    .flatMap(lineItem -> lineItem.getRequisitionIds().stream())
+                    .collect(toSet()))),
+        groupedByDistricts.entrySet().stream()
+            .collect(toMap(
+                Entry::getKey,
+                entry -> entry.getValue().stream()
+                    .flatMap(lineItem -> lineItem.getSupervisoryNodeIds().stream())
+                    .collect(toSet()))));
   }
 
   private RequisitionSummaryLineItemDto build(UUID orderableId,
-      Map<String, Map<Integer, List<RequisitionQueryLineItem>>> groupedByZones) {
+      Map<String, Map<Integer, List<RequisitionQueryLineItem>>> groupedByDistricts) {
     return new RequisitionSummaryLineItemDto(
         new ObjectReferenceDto(orderableId, serviceUrl, ORDERABLES_RESOURCE),
-        groupedByZones.entrySet().stream()
-            .map(entry -> build(entry.getKey(), entry.getValue()))
-            .collect(toList()));
+        groupedByDistricts.entrySet().stream()
+            .collect(toMap(Entry::getKey, entry -> build(entry.getValue()))));
   }
 
-  private OrderableZonalSummaryDto build(String districtName,
+  private OrderableDistrictSummaryDto build(
       Map<Integer, List<RequisitionQueryLineItem>> groupedByOrderableVersion) {
-    return new OrderableZonalSummaryDto(districtName,
+    return new OrderableDistrictSummaryDto(
         groupedByOrderableVersion.entrySet().stream()
             .map(entry -> build(entry.getKey(), entry.getValue()))
-            .collect(toList()),
-        groupedByOrderableVersion.values().stream()
-            .flatMap(Collection::stream)
-            .map(RequisitionQueryLineItem::getRequisitionIds)
-            .flatMap(Collection::stream)
-            .collect(toSet()));
+            .collect(toList()));
   }
 
   private OrderableVersionSummaryDto build(Integer orderableVersion,

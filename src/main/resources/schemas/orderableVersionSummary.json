@@ -6,20 +6,25 @@
   "properties": {
     "versionNumber": {
       "type": "integer",
-      "title": "versionNumber"
+      "title": "Orderable Version Number"
     },
     "stockOnHand": {
       "type": "integer",
-      "title": "stockOnHand"
+      "title": "Stock on Hand"
     },
     "requestedQuantity": {
       "type": "integer",
-      "title": "requestedQuantity"
+      "title": "Requested Quantity"
+    },
+    "packsToShip": {
+      "type": "integer",
+      "title": "Packs to Ship"
     }
   },
   "required": [
     "versionNumber",
     "stockOnHand",
-    "requestedQuantity"
+    "requestedQuantity",
+    "packsToShip"
   ]
 }

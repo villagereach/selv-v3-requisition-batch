@@ -7,20 +7,21 @@
     "orderable": {
       "type": "object",
       "$ref": "referenceObjectDto.json",
-      "title": "orderable"
+      "title": "Orderable Reference"
     },
-    "zoneSummaries": {
-      "type": "array",
-      "title": "zoneSummaries",
-      "items": {
-        "type": "object",
-        "$ref": "orderableZonalSummary.json"
-      },
-      "uniqueItems": false
+    "districtSummaries": {
+      "type": "object",
+      "title": "District Summary",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "$ref": "orderableDistrictSummary.json"
+        }
+      }
     }
   },
   "required": [
     "orderable",
-    "zoneSummaries"
+    "districtSummaries"
   ]
 }

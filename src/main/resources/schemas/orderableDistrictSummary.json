@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "OrderableZonalSummary",
+  "description": "Orderable District Summary.",
+  "properties": {
+    "orderableVersions": {
+      "type": "array",
+      "title": "Orderable Versions",
+      "items": {
+        "type": "object",
+        "$ref": "orderableVersionSummary.json"
+      },
+      "uniqueItems": false
+    }
+  },
+  "required": [
+    "orderableVersions"
+  ]
+}

@@ -15,8 +15,13 @@
 
 package org.openlmis.requisition.batch.testutils;
 
+import static com.google.common.collect.Sets.newHashSet;
+
+import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
@@ -27,6 +32,8 @@ public class RequisitionSummaryDtoDataBuilder {
   private ObjectReferenceDto program;
   private ObjectReferenceDto processingPeriod;
   private List<RequisitionSummaryLineItemDto> lineItems;
+  private Map<String, Set<UUID>> districtRequisitionIds;
+  private Map<String, Set<UUID>> districtSupervisoryNodeIds;
 
   /**
    * Used for creating new instance of {@link RequisitionSummaryDto}.
@@ -40,10 +47,17 @@ public class RequisitionSummaryDtoDataBuilder {
         .buildAsDto();
     lineItems = new ArrayList<>();
     lineItems.add(new RequisitionSummaryLineItemDtoDataBuilder().build());
+    districtRequisitionIds = ImmutableMap.<String, Set<UUID>>builder()
+        .put("district", newHashSet(UUID.randomUUID()))
+        .build();
+    districtSupervisoryNodeIds = ImmutableMap.<String, Set<UUID>>builder()
+        .put("district", newHashSet(UUID.randomUUID()))
+        .build();
   }
 
   public RequisitionSummaryDto build() {
-    return new RequisitionSummaryDto(program, processingPeriod, lineItems);
+    return new RequisitionSummaryDto(program, processingPeriod, lineItems, districtRequisitionIds,
+        districtSupervisoryNodeIds);
   }
 
   /**
@@ -76,6 +90,18 @@ public class RequisitionSummaryDtoDataBuilder {
 
   public RequisitionSummaryDtoDataBuilder withLineItems(List<RequisitionSummaryLineItemDto> items) {
     lineItems = items;
+    return this;
+  }
+
+  public RequisitionSummaryDtoDataBuilder withDistrictRequisitionIds(
+      Map<String, Set<UUID>> districtRequisitionIds) {
+    this.districtRequisitionIds = districtRequisitionIds;
+    return this;
+  }
+
+  public RequisitionSummaryDtoDataBuilder withDistrictSupervisoryNodeIds(
+      Map<String, Set<UUID>> districtSupervisoryNodeIds) {
+    this.districtSupervisoryNodeIds = districtSupervisoryNodeIds;
     return this;
   }
 }

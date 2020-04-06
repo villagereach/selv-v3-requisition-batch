@@ -15,13 +15,20 @@
 
 package org.openlmis.requisition.batch.dto.summary;
 
-import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
-import org.openlmis.requisition.batch.testutils.EqualsContractTest;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-public class OrderableZonalSummaryDtoTest extends EqualsContractTest<OrderableZonalSummaryDto> {
-
-  @Override
-  protected Class<OrderableZonalSummaryDto> getTestClass() {
-    return OrderableZonalSummaryDto.class;
-  }
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
+public final class OrderableDistrictSummaryDto {
+  private List<OrderableVersionSummaryDto> orderableVersions;
 }

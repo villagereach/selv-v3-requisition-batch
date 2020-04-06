@@ -15,27 +15,33 @@
 
 package org.openlmis.requisition.batch.testutils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.openlmis.requisition.batch.dto.ObjectReferenceDto;
-import org.openlmis.requisition.batch.dto.summary.OrderableZonalSummaryDto;
+import org.openlmis.requisition.batch.dto.summary.OrderableDistrictSummaryDto;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryLineItemDto;
 
 public class RequisitionSummaryLineItemDtoDataBuilder {
 
+  private static int instanceNumber = 0;
+
   private ObjectReferenceDto orderable;
-  private List<OrderableZonalSummaryDto> zoneSummaries;
+  private Map<String, OrderableDistrictSummaryDto> zoneSummaries;
 
   /**
    * Used for creating new instance of {@link RequisitionSummaryLineItemDto}.
    */
   public RequisitionSummaryLineItemDtoDataBuilder() {
+    instanceNumber++;
+
     orderable = new ObjectReferenceDtoDataBuilder()
         .withPath("orderables")
         .buildAsDto();
-    zoneSummaries = new ArrayList<>();
-    zoneSummaries.add(new OrderableZonalSummaryDtoDataBuilder().build());
+    zoneSummaries = new HashMap<>();
+    zoneSummaries.put(
+        "zone" + instanceNumber,
+        new OrderableDistrictSummaryDtoDataBuilder().build());
   }
 
   public RequisitionSummaryLineItemDto build() {
@@ -57,7 +63,7 @@ public class RequisitionSummaryLineItemDtoDataBuilder {
   }
 
   public RequisitionSummaryLineItemDtoDataBuilder withZoneSummaries(
-      List<OrderableZonalSummaryDto> zoneSummaries) {
+      Map<String, OrderableDistrictSummaryDto> zoneSummaries) {
     this.zoneSummaries = zoneSummaries;
     return this;
   }

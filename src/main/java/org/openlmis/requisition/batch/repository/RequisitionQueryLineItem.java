@@ -38,4 +38,5 @@ public final class RequisitionQueryLineItem {
   private Integer stockOnHand;
   private Integer packsToShip;
   private List<UUID> requisitionIds;
+  private List<UUID> supervisoryNodeIds;
 }

@@ -19,6 +19,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -30,10 +31,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.requisition.batch.dto.summary.OrderableDistrictSummaryDto;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
+import org.openlmis.requisition.batch.testutils.OrderableDistrictSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.OrderableVersionSummaryDtoDataBuilder;
-import org.openlmis.requisition.batch.testutils.OrderableZonalSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionQueryLineItemDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryLineItemDtoDataBuilder;
@@ -91,55 +93,71 @@ public class RequisitionSummaryBuilderTest {
       .withLineItems(newArrayList(
           new RequisitionSummaryLineItemDtoDataBuilder()
               .withOrderableId(orderable1)
-              .withZoneSummaries(newArrayList(
-                  new OrderableZonalSummaryDtoDataBuilder()
-                      .withDistrictName(district1)
-                      .withOrderableVersions(newArrayList(
-                          new OrderableVersionSummaryDtoDataBuilder()
-                              .withVersionNumber(1)
-                              .withRequestedQuantity(item1.getRequestedQuantity()
-                                  + item2.getRequestedQuantity())
-                              .withStockOnHand(item1.getStockOnHand() + item2.getStockOnHand())
-                              .withPacksToShip(item1.getPacksToShip() + item2.getPacksToShip())
-                              .build(),
-                          new OrderableVersionSummaryDtoDataBuilder()
-                              .withVersionNumber(2)
-                              .withRequestedQuantity(item3.getRequestedQuantity())
-                              .withStockOnHand(item3.getStockOnHand())
-                              .withPacksToShip(item3.getPacksToShip())
-                              .build()))
-                      .withRequisitionIds(toSet(item1.getRequisitionIds(),
-                          item2.getRequisitionIds(), item3.getRequisitionIds()))
-                      .build(),
-                  new OrderableZonalSummaryDtoDataBuilder()
-                      .withDistrictName(district2)
-                      .withOrderableVersions(newArrayList(
-                          new OrderableVersionSummaryDtoDataBuilder()
-                              .withVersionNumber(1)
-                              .withRequestedQuantity(item5.getRequestedQuantity()
-                                  + item6.getRequestedQuantity())
-                              .withStockOnHand(item5.getStockOnHand() + item6.getStockOnHand())
-                              .withPacksToShip(item5.getPacksToShip() + item6.getPacksToShip())
-                              .build()))
-                      .withRequisitionIds(toSet(item5.getRequisitionIds(),
-                          item6.getRequisitionIds()))
-                      .build()))
-              .build(),
+              .withZoneSummaries(
+                  ImmutableMap.<String, OrderableDistrictSummaryDto>builder()
+                      .put(
+                          district1,
+                          new OrderableDistrictSummaryDtoDataBuilder()
+                              .withOrderableVersions(newArrayList(
+                                  new OrderableVersionSummaryDtoDataBuilder()
+                                      .withVersionNumber(1)
+                                      .withRequestedQuantity(item1.getRequestedQuantity()
+                                          + item2.getRequestedQuantity())
+                                      .withStockOnHand(
+                                          item1.getStockOnHand() + item2.getStockOnHand())
+                                      .withPacksToShip(
+                                          item1.getPacksToShip() + item2.getPacksToShip())
+                                      .build(),
+                                  new OrderableVersionSummaryDtoDataBuilder()
+                                      .withVersionNumber(2)
+                                      .withRequestedQuantity(item3.getRequestedQuantity())
+                                      .withStockOnHand(item3.getStockOnHand())
+                                      .withPacksToShip(item3.getPacksToShip())
+                                      .build()))
+                              .build())
+                      .put(
+                          district2,
+                          new OrderableDistrictSummaryDtoDataBuilder()
+                              .withOrderableVersions(newArrayList(
+                                  new OrderableVersionSummaryDtoDataBuilder()
+                                      .withVersionNumber(1)
+                                      .withRequestedQuantity(item5.getRequestedQuantity()
+                                          + item6.getRequestedQuantity())
+                                      .withStockOnHand(
+                                          item5.getStockOnHand() + item6.getStockOnHand())
+                                      .withPacksToShip(
+                                          item5.getPacksToShip() + item6.getPacksToShip())
+                                      .build()))
+                              .build())
+                      .build())
+                  .build(),
           new RequisitionSummaryLineItemDtoDataBuilder()
               .withOrderableId(orderable2)
-              .withZoneSummaries(newArrayList(
-                  new OrderableZonalSummaryDtoDataBuilder()
-                      .withDistrictName(district1)
-                      .withOrderableVersions(newArrayList(
-                          new OrderableVersionSummaryDtoDataBuilder()
-                              .withVersionNumber(1)
-                              .withRequestedQuantity(item4.getRequestedQuantity())
-                              .withStockOnHand(item4.getStockOnHand())
-                              .withPacksToShip(item4.getPacksToShip())
-                              .build()))
-                      .withRequisitionIds(toSet(item4.getRequisitionIds()))
-                      .build()))
+              .withZoneSummaries(
+                  ImmutableMap.<String, OrderableDistrictSummaryDto>builder()
+                      .put(
+                          district1,
+                          new OrderableDistrictSummaryDtoDataBuilder()
+                              .withOrderableVersions(newArrayList(
+                                  new OrderableVersionSummaryDtoDataBuilder()
+                                      .withVersionNumber(1)
+                                      .withRequestedQuantity(item4.getRequestedQuantity())
+                                      .withStockOnHand(item4.getStockOnHand())
+                                      .withPacksToShip(item4.getPacksToShip())
+                                      .build()))
+                              .build())
+                      .build())
               .build()))
+      .withDistrictRequisitionIds(ImmutableMap.<String, Set<UUID>>builder()
+          .put(district1, toSet(item1.getRequisitionIds(), item2.getRequisitionIds(),
+              item3.getRequisitionIds(), item4.getRequisitionIds()))
+          .put(district2, toSet(item5.getRequisitionIds(), item6.getRequisitionIds()))
+          .build())
+      .withDistrictSupervisoryNodeIds(ImmutableMap.<String, Set<UUID>>builder()
+          .put(district1, toSet(item1.getSupervisoryNodeIds(), item2.getSupervisoryNodeIds(),
+              item3.getSupervisoryNodeIds(), item4.getSupervisoryNodeIds()))
+          .put(district2, toSet(item5.getSupervisoryNodeIds(), item6.getSupervisoryNodeIds()))
+          .build())
       .build();
 
   @Before
