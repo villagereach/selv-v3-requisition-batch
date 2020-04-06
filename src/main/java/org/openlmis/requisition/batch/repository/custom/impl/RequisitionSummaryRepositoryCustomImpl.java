@@ -48,6 +48,7 @@ public class RequisitionSummaryRepositoryCustomImpl {
       + " INNER JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
       + " INNER JOIN requisitionbatch.batch_geographic_zones AS z ON z.id = f.geographiczoneid"
       + " WHERE f.id IN ('%s') AND r.processingperiodid = '%s' AND r.programid = '%s'"
+      + " AND r.status in ('AUTHORIZED', 'IN_APPROVAL')"
       + " GROUP BY z.name, li.orderableid,"
       + " li.orderableversionnumber, r.processingperiodid, r.programid;";
 
