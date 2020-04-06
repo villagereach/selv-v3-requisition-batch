@@ -81,7 +81,7 @@ public class RequisitionSummaryRepositoryCustomImpl {
             Arrays.stream(((String) fields[6]).split(","))
                 .map(UUID::fromString)
                 .collect(toList()),
-            Arrays.stream(((String) fields[6]).split(","))
+            Arrays.stream(((String) fields[7]).split(","))
                 .map(UUID::fromString)
                 .collect(toList())
         ))
