@@ -47,8 +47,8 @@ public class RequisitionSummaryRepositoryCustomImpl {
       + " INNER JOIN requisitionbatch.batch_requisition_line_items AS li ON li.requisitionid = r.id"
       + " INNER JOIN requisitionbatch.batch_facilities AS f ON f.id = r.facilityid"
       + " INNER JOIN requisitionbatch.batch_geographic_zones AS z ON z.id = f.geographiczoneid"
-      + " WHERE f.id IN ('%s') AND r.processingperiodid = '%s' AND r.programid = '%s'"
-      + " AND r.status in ('AUTHORIZED', 'IN_APPROVAL')"
+      + " WHERE r.supervisorynodeid IN ('%s') AND r.processingperiodid = '%s'"
+      + " AND r.programid = '%s' AND r.status in ('AUTHORIZED', 'IN_APPROVAL')"
       + " GROUP BY z.name, li.orderableid,"
       + " li.orderableversionnumber, r.processingperiodid, r.programid;";
 
@@ -60,14 +60,14 @@ public class RequisitionSummaryRepositoryCustomImpl {
    *
    * @param  processingPeriodId period id for summary
    * @param  programId          program id for summary
-   * @param  facilityIds        ids of supervised facilities for user
+   * @param  supervisoryNodeIds ids of node supervised by user
    * @return                    grouped data for requisition summary
    */
   public List<RequisitionQueryLineItem> getRequisitionSummaries(UUID processingPeriodId,
-      UUID programId, Set<UUID> facilityIds) {
+      UUID programId, Set<UUID> supervisoryNodeIds) {
     Query query = entityManager.createNativeQuery(
         String.format(REQUISITION_SUMMARY_SQL,
-            facilityIds.stream().map(UUID::toString).collect(joining("','")),
+            supervisoryNodeIds.stream().map(UUID::toString).collect(joining("','")),
             processingPeriodId,
             programId));
     addScalars(query);

@@ -15,21 +15,21 @@
 
 package org.openlmis.requisition.batch.service.summary;
 
-import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.openlmis.requisition.batch.i18n.MessageKeys.ERROR_NO_APPROVE_PERMISSION;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.exception.PermissionMessageException;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
-import org.openlmis.requisition.batch.service.referencedata.PermissionService;
-import org.openlmis.requisition.batch.service.referencedata.PermissionStringDto;
-import org.openlmis.requisition.batch.service.referencedata.PermissionStrings;
+import org.openlmis.requisition.batch.service.referencedata.DetailedRoleAssignmentDto;
 import org.openlmis.requisition.batch.service.referencedata.UserDto;
+import org.openlmis.requisition.batch.service.referencedata.UserReferenceDataService;
 import org.openlmis.requisition.batch.util.AuthenticationHelper;
 import org.openlmis.requisition.batch.util.Message;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummariesSearchParams;
@@ -47,10 +47,10 @@ public class RequisitionSummaryService {
   private static final String REQUISITION_APPROVE_RIGHT = "REQUISITION_APPROVE";
 
   @Autowired
-  private PermissionService permissionService;
+  private AuthenticationHelper authenticationHelper;
 
   @Autowired
-  private AuthenticationHelper authenticationHelper;
+  private UserReferenceDataService userReferenceDataService;
 
   @Autowired
   private RequisitionSummaryBuilder requisitionSummaryBuilder;
@@ -74,17 +74,15 @@ public class RequisitionSummaryService {
     UserDto user = authenticationHelper.getCurrentUser();
 
     profiler.start("GET_PERMISSION_STRINGS");
-    PermissionStrings.Handler handler = permissionService.getPermissionStrings(user.getId());
-    Set<PermissionStringDto> permissionStrings = handler.get();
+    Set<UUID> nodeIds = userReferenceDataService.getRoleAssignments(user.getId()).stream()
+        .filter(roleAssignment -> roleAssignment.getProgramId().equals(params.getProgramId()))
+        .filter(roleAssignment -> roleAssignment.getRole().getRights().stream()
+            .anyMatch(right -> right.getName().equals(REQUISITION_APPROVE_RIGHT)))
+        .map(DetailedRoleAssignmentDto::getSupervisoryNodeId)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toSet());
 
-    profiler.start("FILTER_SUPERVISED_FACILITIES");
-    Set<UUID> supervisedFacilitiesIds = permissionStrings.stream()
-        .filter(permission -> permission.getRightName().equals(REQUISITION_APPROVE_RIGHT))
-        .filter(permission -> permission.getProgramId().equals(params.getProgramId()))
-        .map(PermissionStringDto::getFacilityId)
-        .collect(toSet());
-
-    if (isEmpty(supervisedFacilitiesIds)) {
+    if (isEmpty(nodeIds)) {
       throw new PermissionMessageException(new Message(ERROR_NO_APPROVE_PERMISSION));
     }
 
@@ -93,7 +91,7 @@ public class RequisitionSummaryService {
         .getRequisitionSummaries(
             params.getProcessingPeriodId(),
             params.getProgramId(),
-            supervisedFacilitiesIds);
+            nodeIds);
 
     profiler.start("BUILD_RESPONSE");
     RequisitionSummaryDto result = requisitionSummaryBuilder.build(

@@ -82,6 +82,16 @@ public class UserReferenceDataService extends BaseReferenceDataService<UserDto> 
   }
 
   /**
+   * Gets list of user role assignments.
+   *
+   * @param  user id of user for getting his/hers role assignments
+   * @return      list of user role assignments
+   */
+  public List<DetailedRoleAssignmentDto> getRoleAssignments(UUID user) {
+    return findAll(user + "/roleAssignments", DetailedRoleAssignmentDto[].class);
+  }
+
+  /**
    * Get user's permission strings (a list of strings that outlines the permissions of the user).
    *
    * @param user id of user

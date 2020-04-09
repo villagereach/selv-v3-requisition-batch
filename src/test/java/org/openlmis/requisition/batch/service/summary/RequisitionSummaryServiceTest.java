@@ -22,7 +22,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Before;
@@ -37,12 +36,15 @@ import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
 import org.openlmis.requisition.batch.exception.PermissionMessageException;
 import org.openlmis.requisition.batch.repository.RequisitionQueryLineItem;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
-import org.openlmis.requisition.batch.service.referencedata.PermissionService;
-import org.openlmis.requisition.batch.service.referencedata.PermissionStringDto;
-import org.openlmis.requisition.batch.service.referencedata.PermissionStrings;
+import org.openlmis.requisition.batch.service.referencedata.DetailedRoleAssignmentDto;
+import org.openlmis.requisition.batch.service.referencedata.RightType;
 import org.openlmis.requisition.batch.service.referencedata.UserDto;
+import org.openlmis.requisition.batch.service.referencedata.UserReferenceDataService;
+import org.openlmis.requisition.batch.testutils.DetailedRoleAssignmentDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionQueryLineItemDataBuilder;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryDtoDataBuilder;
+import org.openlmis.requisition.batch.testutils.RightDtoDataBuilder;
+import org.openlmis.requisition.batch.testutils.RoleDtoDataBuilder;
 import org.openlmis.requisition.batch.testutils.UserDtoDataBuilder;
 import org.openlmis.requisition.batch.util.AuthenticationHelper;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummariesSearchParams;
@@ -60,10 +62,10 @@ public class RequisitionSummaryServiceTest {
   public ExpectedException exception = ExpectedException.none();
 
   @Mock
-  private PermissionService permissionService;
+  private AuthenticationHelper authenticationHelper;
 
   @Mock
-  private AuthenticationHelper authenticationHelper;
+  private UserReferenceDataService userReferenceDataService;
 
   @Mock
   private RequisitionSummaryBuilder requisitionSummaryBuilder;
@@ -74,17 +76,27 @@ public class RequisitionSummaryServiceTest {
   @InjectMocks
   private RequisitionSummaryService requisitionSummaryService;
 
-  @Mock
-  private PermissionStrings.Handler permissionStringsHandler;
-
   private UserDto user = new UserDtoDataBuilder().buildAsDto();
-  private UUID facilityId = UUID.randomUUID();
+  private UUID supervisoryNodeId = UUID.randomUUID();
   private UUID programId = UUID.randomUUID();
   private UUID processingPeriodId = UUID.randomUUID();
   private List<RequisitionQueryLineItem> queryResult = newArrayList(
       new RequisitionQueryLineItemDataBuilder().build());
   private RequisitionSummaryDto requisitionSummary = new RequisitionSummaryDtoDataBuilder().build();
   private RequisitionSummariesSearchParams params;
+  private List<DetailedRoleAssignmentDto> roleAssignments = newArrayList(
+      new DetailedRoleAssignmentDataBuilder()
+          .withProgramId(programId)
+          .withSupervisoryNodeId(supervisoryNodeId)
+          .withRole(new RoleDtoDataBuilder()
+              .withRights(asSet(
+                  new RightDtoDataBuilder()
+                      .withName(REQUISITION_APPROVE_RIGHT)
+                      .withType(RightType.SUPERVISION)
+                      .build()))
+              .build())
+          .build()
+  );
 
   @Before
   public void setUp() {
@@ -94,13 +106,10 @@ public class RequisitionSummaryServiceTest {
     params = new RequisitionSummariesSearchParams(paramsMap);
 
     when(authenticationHelper.getCurrentUser()).thenReturn(user);
-    when(permissionService.getPermissionStrings(eq(user.getId())))
-        .thenReturn(permissionStringsHandler);
-    when(permissionStringsHandler.get())
-        .thenReturn(asSet(
-            PermissionStringDto.create(REQUISITION_APPROVE_RIGHT, facilityId, programId)));
+    when(userReferenceDataService.getRoleAssignments(eq(user.getId())))
+        .thenReturn(roleAssignments);
     when(requisitionSummaryRepository.getRequisitionSummaries(
-        eq(processingPeriodId), eq(programId), eq(asSet(facilityId))))
+        eq(processingPeriodId), eq(programId), eq(asSet(supervisoryNodeId))))
         .thenReturn(queryResult);
     when(requisitionSummaryBuilder.build(eq(queryResult), eq(programId), eq(processingPeriodId)))
         .thenReturn(requisitionSummary);
@@ -115,7 +124,7 @@ public class RequisitionSummaryServiceTest {
   public void shouldThrowPermissionExceptionWhenUserIsLackingApproveRight() {
     exception.expect(PermissionMessageException.class);
 
-    when(permissionStringsHandler.get()).thenReturn(new HashSet<>());
+    when(userReferenceDataService.getRoleAssignments(eq(user.getId()))).thenReturn(newArrayList());
 
     requisitionSummaryService.getRequisitionSummary(params);
   }
