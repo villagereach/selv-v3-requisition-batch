@@ -75,7 +75,8 @@ public class RequisitionSummaryService {
 
     profiler.start("GET_PERMISSION_STRINGS");
     Set<UUID> nodeIds = userReferenceDataService.getRoleAssignments(user.getId()).stream()
-        .filter(roleAssignment -> roleAssignment.getProgramId().equals(params.getProgramId()))
+        .filter(roleAssignment -> Objects
+            .equals(params.getProgramId(), roleAssignment.getProgramId()))
         .filter(roleAssignment -> roleAssignment.getRole().getRights().stream()
             .anyMatch(right -> right.getName().equals(REQUISITION_APPROVE_RIGHT)))
         .map(DetailedRoleAssignmentDto::getSupervisoryNodeId)
