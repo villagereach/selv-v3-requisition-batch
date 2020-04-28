@@ -86,4 +86,14 @@ public class RequisitionQueryLineItemDataBuilder {
     this.packsToShip = packsToShip;
     return this;
   }
+
+  public RequisitionQueryLineItemDataBuilder withSupervisoryNodeIds(List<UUID> supervisoryNodeIds) {
+    this.supervisoryNodeIds = supervisoryNodeIds;
+    return this;
+  }
+
+  public RequisitionQueryLineItemDataBuilder withRequisitionIds(List<UUID> requisitionIds) {
+    this.requisitionIds = requisitionIds;
+    return this;
+  }
 }
