@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.requisition.batch.repository.custom.impl.RequisitionSummaryRepositoryCustomImpl;
@@ -41,40 +42,84 @@ public class RequisitionSummaryRepositoryIntegrationTest {
   @Autowired
   private RequisitionSummaryRepositoryCustomImpl requisitionSummaryRepository;
 
-  private UUID supervisoryNodeId1 = UUID.fromString("7dbcd317-3e50-4964-ab11-d6acf0537d2d");
-  private UUID supervisoryNodeId2 = UUID.fromString("0a85b106-888f-11ea-bc55-0242ac130003");
-  private UUID processingPeriodId = UUID.fromString("5c196f55-d38f-449b-b7dd-5636d640cf22");
-  private UUID programId = UUID.fromString("fabfd914-1bb1-470c-9e5d-f138b3ce70b8");
-  private UUID orderableId = UUID.fromString("37cead00-608f-41ef-928e-3d79e8701c36");
+  private static final String DISTRICT = "TEST_DISTRICT_NAME";
+  private static final UUID SUPERVISORY_NODE_ID_1 =
+          UUID.fromString("7dbcd317-3e50-4964-ab11-d6acf0537d2d");
+  private static final UUID SUPERVISORY_NODE_ID_2 =
+          UUID.fromString("0a85b106-888f-11ea-bc55-0242ac130003");
+  private static final UUID PROCESSING_PERIOD_ID =
+          UUID.fromString("5c196f55-d38f-449b-b7dd-5636d640cf22");
+  private static final UUID PROGRAM_ID = UUID.fromString("fabfd914-1bb1-470c-9e5d-f138b3ce70b8");
+  private static final UUID RANDOM_PROGRAM_ID =
+          UUID.fromString("3879701a-89ee-11ea-bc55-0242ac130003");
+  private static final UUID ORDERABLE_ID = UUID.fromString("37cead00-608f-41ef-928e-3d79e8701c36");
+  private static final UUID REQUISITION_ID_1 =
+          UUID.fromString("afcea43d-31e9-49fe-ba74-e5b0dc2c47c4");
+  private static final UUID REQUISITION_ID_2 =
+          UUID.fromString("5d56ed06-888e-11ea-bc55-0242ac130003");
+  private static final UUID REQUISITION_ID_APPROVED =
+          UUID.fromString("07964b80-89e9-11ea-bc55-0242ac130003");
   private List<UUID> supervisoryNodeIds = new ArrayList<>();
-  private UUID requisitionId1 = UUID.fromString("afcea43d-31e9-49fe-ba74-e5b0dc2c47c4");
-  private UUID requisitionId2 = UUID.fromString("5d56ed06-888e-11ea-bc55-0242ac130003");
   private List<UUID> requisitionIds = new ArrayList<>();
+  private RequisitionQueryLineItem expectedRequisitionQueryLineItem;
+  private List<RequisitionQueryLineItem> requisitionQueryLineItemList;
 
-  @Test
-  public void shouldGetRequisitionQueryLineItems() {
-    supervisoryNodeIds.add(supervisoryNodeId1);
-    supervisoryNodeIds.add(supervisoryNodeId2);
-    requisitionIds.add(requisitionId1);
-    requisitionIds.add(requisitionId2);
+  @Before
+  public void setUp() {
+    supervisoryNodeIds.add(SUPERVISORY_NODE_ID_1);
+    supervisoryNodeIds.add(SUPERVISORY_NODE_ID_2);
+    requisitionIds.add(REQUISITION_ID_1);
+    requisitionIds.add(REQUISITION_ID_2);
 
-    RequisitionQueryLineItem requisitionQueryLineItem =
+    expectedRequisitionQueryLineItem =
             new RequisitionQueryLineItemDataBuilder()
-                    .withDistrictName("DISTRICT")
-                    .withOrderableId(orderableId)
-                    .withOrderableVersionNumber(66)
+                    .withDistrictName(DISTRICT)
+                    .withOrderableId(ORDERABLE_ID)
                     .withStockOnHand(40)
                     .withPacksToShip(10)
                     .withRequestedQuantity(200)
                     .withSupervisoryNodeIds(supervisoryNodeIds)
                     .withRequisitionIds(requisitionIds)
                     .build();
+  }
 
-    List<RequisitionQueryLineItem> requisitionQueryLineItemList =
-            requisitionSummaryRepository.getRequisitionSummaries(
-        processingPeriodId, programId, asSet(supervisoryNodeId1, supervisoryNodeId2));
+  @Test
+  public void shouldGetRequisitionQueryLineItems() {
+    requisitionQueryLineItemList = requisitionSummaryRepository.getRequisitionSummaries(
+                    PROCESSING_PERIOD_ID, PROGRAM_ID,
+                    asSet(SUPERVISORY_NODE_ID_1, SUPERVISORY_NODE_ID_2));
 
     assertEquals(1, requisitionQueryLineItemList.size());
-    assertEquals(requisitionQueryLineItem, requisitionQueryLineItemList.get(0));
+    assertEquals(expectedRequisitionQueryLineItem, requisitionQueryLineItemList.get(0));
+    assertEquals(2, requisitionQueryLineItemList.get(0).getRequisitionIds().size());
+  }
+
+  @Test
+  public void shouldGetOneRequisitionInRequisitionQueryLineItems() {
+    requisitionQueryLineItemList = requisitionSummaryRepository.getRequisitionSummaries(
+                    PROCESSING_PERIOD_ID, PROGRAM_ID,
+                    asSet(SUPERVISORY_NODE_ID_1));
+
+    assertEquals(1, requisitionQueryLineItemList.size());
+    assertEquals(1, requisitionQueryLineItemList.get(0).getRequisitionIds().size());
+  }
+
+  @Test
+  public void shouldNotReturnRequisitionsWithApprovedStatus() {
+    requisitionQueryLineItemList = requisitionSummaryRepository.getRequisitionSummaries(
+                    PROCESSING_PERIOD_ID, PROGRAM_ID,
+                    asSet(SUPERVISORY_NODE_ID_1, SUPERVISORY_NODE_ID_2));
+
+    assertEquals(requisitionQueryLineItemList.get(0).getRequisitionIds()
+            .contains(REQUISITION_ID_APPROVED),false);
+  }
+
+  @Test
+  public void shouldNotReturnRequisitionQueryLineItemsForRandomProgamId() {
+    requisitionQueryLineItemList = requisitionSummaryRepository.getRequisitionSummaries(
+                    PROCESSING_PERIOD_ID, RANDOM_PROGRAM_ID,
+                    asSet(SUPERVISORY_NODE_ID_1, SUPERVISORY_NODE_ID_2));
+
+    assertEquals(requisitionQueryLineItemList.isEmpty(), true);
   }
 }

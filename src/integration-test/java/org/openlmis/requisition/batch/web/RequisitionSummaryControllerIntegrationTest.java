@@ -16,6 +16,7 @@
 package org.openlmis.requisition.batch.web;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.eq;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.requisition.batch.dto.summary.RequisitionSummaryDto;
+import org.openlmis.requisition.batch.i18n.MessageKeys;
 import org.openlmis.requisition.batch.service.summary.RequisitionSummaryService;
 import org.openlmis.requisition.batch.testutils.RequisitionSummaryDtoDataBuilder;
 import org.openlmis.requisition.batch.web.summary.RequisitionSummariesSearchParams;
@@ -92,25 +94,33 @@ public class RequisitionSummaryControllerIntegrationTest extends BaseWebIntegrat
 
   @Test
   public void shouldReturnBadRequestWhenProgramIdWasNotProvided() {
-    restAssured
+    String messageKey = restAssured
         .given()
         .header(HttpHeaders.AUTHORIZATION, getTokenHeader())
         .queryParameter(PROCESSING_PERIOD_ID, processingPeriodId)
         .when()
         .get(RESOURCE_URL)
         .then()
-        .statusCode(400);
+        .statusCode(400)
+        .extract()
+        .path(MESSAGE_KEY);
+
+    assertEquals(messageKey, MessageKeys.ERROR_PROGRAM_ID_NOT_PROVIDED);
   }
 
   @Test
   public void shouldReturnBadRequestWhenProcessingPeriodIdWasNotProvided() {
-    restAssured
+    String messageKey = restAssured
         .given()
         .header(HttpHeaders.AUTHORIZATION, getTokenHeader())
         .queryParameter(PROGRAM_ID, programId)
         .when()
         .get(RESOURCE_URL)
         .then()
-        .statusCode(400);
+        .statusCode(400)
+        .extract()
+        .path(MESSAGE_KEY);
+
+    assertEquals(messageKey, MessageKeys.ERROR_PROCESSING_PERIOD_ID_NOT_PROVIDED);
   }
 }

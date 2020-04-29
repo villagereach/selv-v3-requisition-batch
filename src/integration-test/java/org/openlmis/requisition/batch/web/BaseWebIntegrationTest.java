@@ -60,6 +60,7 @@ public abstract class BaseWebIntegrationTest {
   private static final String CLIENT_ACCESS_TOKEN_HEADER = "Bearer " + CLIENT_ACCESS_TOKEN;
 
   static final String RAML_ASSERT_MESSAGE = "HTTP request/response should match RAML definition.";
+  static final String MESSAGE_KEY = "messageKey";
 
   RestAssuredClient restAssured;
 
